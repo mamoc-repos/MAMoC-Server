@@ -25,7 +25,7 @@ class ClientComponent(ApplicationSession):
             await self.sub.unsubscribe()
 
         # try:
-        #     res = yield self.call('uk.ac.standrews.cs.mamoc.search', "large", "hi")
+        #     res = await self.call('uk.ac.standrews.cs.mamoc.search', "large", "hi")
         #     print("Search: {}".format(res))
         #
         # except Exception as e:
