@@ -1,0 +1,52 @@
+# Luk/ac/standrews/cs/mamoc_test/NQueens/Queens;->isConsistent([I I)Z [access_flags=private static]
+#
+# Parameters:
+# - local registers: v0...v3
+# - v4:int[]
+# - v5:int
+#
+# - return:boolean
+
+isConsistent-BB@0x0 : [ isConsistent-BB@0x4 ]
+	0       (00000000) const/4              v0, 0
+	1       (00000002) move                 v1, v0
+
+isConsistent-BB@0x4 : [ isConsistent-BB@0x8 isConsistent-BB@0x44 ]
+	2       (00000004) if-ge                v1, v5, +20
+
+isConsistent-BB@0x8 : [ isConsistent-BB@0x14 isConsistent-BB@0x16 ]
+	3       (00000008) aget                 v2, v4, v1
+	4       (0000000c) aget                 v3, v4, v5
+	5       (00000010) if-ne                v2, v3, +3
+
+isConsistent-BB@0x14 : 
+	6       (00000014) return               v0
+
+isConsistent-BB@0x16 : [ isConsistent-BB@0x28 isConsistent-BB@0x2a ]
+	7       (00000016) aget                 v2, v4, v1
+	8       (0000001a) aget                 v3, v4, v5
+	9       (0000001e) sub-int/2addr        v2, v3
+	10      (00000020) sub-int              v3, v5, v1
+	11      (00000024) if-ne                v2, v3, +3
+
+isConsistent-BB@0x28 : 
+	12      (00000028) return               v0
+
+isConsistent-BB@0x2a : [ isConsistent-BB@0x3c isConsistent-BB@0x3e ]
+	13      (0000002a) aget                 v2, v4, v5
+	14      (0000002e) aget                 v3, v4, v1
+	15      (00000032) sub-int/2addr        v2, v3
+	16      (00000034) sub-int              v3, v5, v1
+	17      (00000038) if-ne                v2, v3, +3
+
+isConsistent-BB@0x3c : 
+	18      (0000003c) return               v0
+
+isConsistent-BB@0x3e : [ isConsistent-BB@0x4 ]
+	19      (0000003e) add-int/lit8         v1, v1, 1
+	20      (00000042) goto                 -1f
+
+isConsistent-BB@0x44 : 
+	21      (00000044) const/4              v0, 1
+	22      (00000046) return               v0
+

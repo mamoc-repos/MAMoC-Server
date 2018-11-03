@@ -1,0 +1,13 @@
+# Luk/ac/standrews/cs/mamoc_test/SearchText/-$$Lambda$SearchActivity$xlnLtK9f7azTZr3kJJMnxVA7Hfs;-><init>(Luk/ac/standrews/cs/mamoc_test/SearchText/SearchActivity;)V [access_flags=public synthetic constructor]
+#
+# Parameters:
+# - local registers: v0...v0
+# - v1:uk.ac.standrews.cs.mamoc_test.SearchText.SearchActivity
+#
+# - return:void
+
+<init>-BB@0x0 : 
+	0       (00000000) invoke-direct        v0, Ljava/lang/Object;-><init>()V
+	1       (00000006) iput-object          v1, v0, Luk/ac/standrews/cs/mamoc_test/SearchText/-$$Lambda$SearchActivity$xlnLtK9f7azTZr3kJJMnxVA7Hfs;->f$0 Luk/ac/standrews/cs/mamoc_test/SearchText/SearchActivity;
+	2       (0000000a) return-void          
+

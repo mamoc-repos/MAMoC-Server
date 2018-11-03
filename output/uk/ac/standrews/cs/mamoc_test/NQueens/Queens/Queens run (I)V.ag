@@ -1,0 +1,14 @@
+# Luk/ac/standrews/cs/mamoc_test/NQueens/Queens;->run(I)V [access_flags=public static]
+#
+# Parameters:
+# - local registers: v0...v1
+# - v2:int
+#
+# - return:void
+
+run-BB@0x0 : 
+	0       (00000000) new-array            v0, v2, [I
+	1       (00000004) const/4              v1, 0
+	2       (00000006) invoke-static        v0, v1, Luk/ac/standrews/cs/mamoc_test/NQueens/Queens;->enumerate([I I)V
+	3       (0000000c) return-void          
+

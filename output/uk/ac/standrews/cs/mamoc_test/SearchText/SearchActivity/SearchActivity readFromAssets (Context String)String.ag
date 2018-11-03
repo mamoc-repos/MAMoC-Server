@@ -1,0 +1,38 @@
+# Luk/ac/standrews/cs/mamoc_test/SearchText/SearchActivity;->readFromAssets(Landroid/content/Context; Ljava/lang/String;)Ljava/lang/String; [access_flags=private]
+#
+# Parameters:
+# - local registers: v0...v4
+# - v5:android.content.Context
+# - v6:java.lang.String
+#
+# - return:java.lang.String
+
+readFromAssets-BB@0x0 : [ readFromAssets-BB@0x36 ]
+	0       (00000000) new-instance         v0, Ljava/io/BufferedReader;
+	1       (00000004) new-instance         v1, Ljava/io/InputStreamReader;
+	2       (00000008) invoke-virtual       v5, Landroid/content/Context;->getAssets()Landroid/content/res/AssetManager;
+	3       (0000000e) move-result-object   v2
+	4       (00000010) invoke-virtual       v2, v6, Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;
+	5       (00000016) move-result-object   v2
+	6       (00000018) invoke-direct        v1, v2, Ljava/io/InputStreamReader;-><init>(Ljava/io/InputStream;)V
+	7       (0000001e) invoke-direct        v0, v1, Ljava/io/BufferedReader;-><init>(Ljava/io/Reader;)V
+	8       (00000024) new-instance         v1, Ljava/lang/StringBuilder;
+	9       (00000028) invoke-direct        v1, Ljava/lang/StringBuilder;-><init>()V
+	10      (0000002e) invoke-virtual       v0, Ljava/io/BufferedReader;->readLine()Ljava/lang/String;
+	11      (00000034) move-result-object   v2
+
+readFromAssets-BB@0x36 : [ readFromAssets-BB@0x3a readFromAssets-BB@0x4a ]
+	12      (00000036) if-eqz               v2, +a
+
+readFromAssets-BB@0x3a : [ readFromAssets-BB@0x36 ]
+	13      (0000003a) invoke-virtual       v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+	14      (00000040) invoke-virtual       v0, Ljava/io/BufferedReader;->readLine()Ljava/lang/String;
+	15      (00000046) move-result-object   v2
+	16      (00000048) goto                 -9
+
+readFromAssets-BB@0x4a : 
+	17      (0000004a) invoke-virtual       v0, Ljava/io/BufferedReader;->close()V
+	18      (00000050) invoke-virtual       v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+	19      (00000056) move-result-object   v3
+	20      (00000058) return-object        v3
+

@@ -1,0 +1,48 @@
+# Luk/ac/standrews/cs/mamoc_test/SearchText/KMP;->computeLPSArray(Ljava/lang/String; I [I)V [access_flags=private]
+#
+# Parameters:
+# - local registers: v0...v4
+# - v5:java.lang.String
+# - v6:int
+# - v7:int[]
+#
+# - return:void
+
+computeLPSArray-BB@0x0 : [ computeLPSArray-BB@0xa ]
+	0       (00000000) const/4              v0, 0
+	1       (00000002) const/4              v1, 1
+	2       (00000004) const/4              v2, 0
+	3       (00000006) aput                 v2, v7, v2
+
+computeLPSArray-BB@0xa : [ computeLPSArray-BB@0xe computeLPSArray-BB@0x48 ]
+	4       (0000000a) if-ge                v1, v6, +1f
+
+computeLPSArray-BB@0xe : [ computeLPSArray-BB@0x22 computeLPSArray-BB@0x30 ]
+	5       (0000000e) invoke-virtual       v5, v1, Ljava/lang/String;->charAt(I)C
+	6       (00000014) move-result          v2
+	7       (00000016) invoke-virtual       v5, v0, Ljava/lang/String;->charAt(I)C
+	8       (0000001c) move-result          v3
+	9       (0000001e) if-ne                v2, v3, +9
+
+computeLPSArray-BB@0x22 : [ computeLPSArray-BB@0xa ]
+	10      (00000022) add-int/lit8         v0, v0, 1
+	11      (00000026) aput                 v0, v7, v1
+	12      (0000002a) add-int/lit8         v1, v1, 1
+	13      (0000002e) goto                 -12
+
+computeLPSArray-BB@0x30 : [ computeLPSArray-BB@0x34 computeLPSArray-BB@0x3e ]
+	14      (00000030) if-eqz               v0, +7
+
+computeLPSArray-BB@0x34 : [ computeLPSArray-BB@0xa ]
+	15      (00000034) add-int/lit8         v2, v0, -1
+	16      (00000038) aget                 v0, v7, v2
+	17      (0000003c) goto                 -19
+
+computeLPSArray-BB@0x3e : [ computeLPSArray-BB@0xa ]
+	18      (0000003e) aput                 v0, v7, v1
+	19      (00000042) add-int/lit8         v1, v1, 1
+	20      (00000046) goto                 -1e
+
+computeLPSArray-BB@0x48 : 
+	21      (00000048) return-void          
+

@@ -1,0 +1,14 @@
+# Luk/ac/standrews/cs/mamoc_test/MainActivity;->openNQueensDemo()V [access_flags=private]
+#
+# Parameters:
+# local registers: v0...v2
+#
+# - return:void
+
+openNQueensDemo-BB@0x0 : 
+	0       (00000000) new-instance         v0, Landroid/content/Intent;
+	1       (00000004) const-class          v1, Luk/ac/standrews/cs/mamoc_test/NQueens/NQueensActivity;
+	2       (00000008) invoke-direct        v0, v2, v1, Landroid/content/Intent;-><init>(Landroid/content/Context; Ljava/lang/Class;)V
+	3       (0000000e) invoke-virtual       v2, v0, Luk/ac/standrews/cs/mamoc_test/MainActivity;->startActivity(Landroid/content/Intent;)V
+	4       (00000014) return-void          
+

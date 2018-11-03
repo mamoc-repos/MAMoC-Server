@@ -1,0 +1,26 @@
+# Luk/ac/standrews/cs/mamoc_test/SearchText/SearchActivity;->getContentFromTextFile(Ljava/lang/String;)Ljava/lang/String; [access_flags=private]
+#
+# Parameters:
+# - local registers: v0...v2
+# - v3:java.lang.String
+#
+# - return:java.lang.String
+
+getContentFromTextFile-BB@0x0 : [ getContentFromTextFile-BB@0x2 ]
+	0       (00000000) const/4              v0, 0
+
+getContentFromTextFile-BB@0x2 : [ getContentFromTextFile-BB@0x16 ]
+	1       (00000002) invoke-direct        v2, v2, v3, Luk/ac/standrews/cs/mamoc_test/SearchText/SearchActivity;->readFromAssets(Landroid/content/Context; Ljava/lang/String;)Ljava/lang/String;
+	2       (00000008) move-result-object   v1
+	3       (0000000a) move-object          v0, v1
+	4       (0000000c) goto                 +5
+	2:9
+	(Ljava/io/IOException; -> e getContentFromTextFile-BB@0xe)
+
+getContentFromTextFile-BB@0xe : [ getContentFromTextFile-BB@0x16 ]
+	5       (0000000e) move-exception       v1
+	6       (00000010) invoke-virtual       v1, Ljava/io/IOException;->printStackTrace()V
+
+getContentFromTextFile-BB@0x16 : 
+	7       (00000016) return-object        v0
+

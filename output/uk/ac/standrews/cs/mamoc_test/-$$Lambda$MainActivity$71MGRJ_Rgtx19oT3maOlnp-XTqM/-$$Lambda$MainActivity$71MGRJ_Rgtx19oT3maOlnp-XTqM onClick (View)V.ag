@@ -1,0 +1,13 @@
+# Luk/ac/standrews/cs/mamoc_test/-$$Lambda$MainActivity$71MGRJ_Rgtx19oT3maOlnp-XTqM;->onClick(Landroid/view/View;)V [access_flags=public final]
+#
+# Parameters:
+# - local registers: v0...v1
+# - v2:android.view.View
+#
+# - return:void
+
+onClick-BB@0x0 : 
+	0       (00000000) iget-object          v0, v1, Luk/ac/standrews/cs/mamoc_test/-$$Lambda$MainActivity$71MGRJ_Rgtx19oT3maOlnp-XTqM;->f$0 Luk/ac/standrews/cs/mamoc_test/MainActivity;
+	1       (00000004) invoke-static        v0, v2, Luk/ac/standrews/cs/mamoc_test/MainActivity;->lambda$onCreate$2(Luk/ac/standrews/cs/mamoc_test/MainActivity; Landroid/view/View;)V
+	2       (0000000a) return-void          
+

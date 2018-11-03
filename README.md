@@ -1,6 +1,6 @@
 # MAMoC-Server
-This is the server component of MAMoC, a Multisite Adaptive Mobile Computation Offloading Framework 
-to offload compute-intensive tasks from mobile devices to more powerful surrogates including edge devices and renmote cloud instances.
+This is the server component of MAMoC, Multisite Adaptive Mobile Computation Offloading Framework 
+to offload compute-intensive tasks from mobile devices to more powerful surrogates including nearby devices, edge devices and remote cloud instances.
 
 ##Setup
 

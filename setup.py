@@ -2,11 +2,15 @@ from setuptools import setup
 
 setup(
     name='MAMoC-Server',
-    version='',
+    version='1.0',
     packages=[''],
     url='',
     license='',
     author='Dawand Sulaiman',
-    author_email='',
-    description='', install_requires=['six', 'autobahn']
+    author_email='djs21@st-andrews.ac.uk',
+    description='MAMoC Server component for handling WAMP RPC calls and PubSub events. It also uses Androguard '
+                'to run a static analysis on APKs and runs a partitioning algorithm on the method call graphs to output'
+                'the local and remote partitions of a mobile application',
+    install_requires=['six', 'autobahn', 'networkx', 'metis', 'androguard', 'matplotlib', 'lxml',
+                                      'requests']
 )

@@ -1,0 +1,68 @@
+# Luk/ac/standrews/cs/mamoc_test/SearchText/KMP;->searchKMP(Ljava/lang/String; Ljava/lang/String;)I [access_flags=public]
+#
+# Parameters:
+# - local registers: v0...v8
+# - v9:java.lang.String
+# - v10:java.lang.String
+#
+# - return:int
+
+searchKMP-BB@0x0 : [ searchKMP-BB@0x20 ]
+	0       (00000000) const/4              v0, 0
+	1       (00000002) invoke-virtual       v10, Ljava/lang/String;->length()I
+	2       (00000008) move-result          v1
+	3       (0000000a) invoke-virtual       v9, Ljava/lang/String;->length()I
+	4       (00000010) move-result          v2
+	5       (00000012) new-array            v3, v1, [I
+	6       (00000016) const/4              v4, 0
+	7       (00000018) invoke-direct        v8, v10, v1, v3, Luk/ac/standrews/cs/mamoc_test/SearchText/KMP;->computeLPSArray(Ljava/lang/String; I [I)V
+	8       (0000001e) const/4              v5, 0
+
+searchKMP-BB@0x20 : [ searchKMP-BB@0x24 searchKMP-BB@0x7e ]
+	9       (00000020) if-ge                v5, v2, +2f
+
+searchKMP-BB@0x24 : [ searchKMP-BB@0x38 searchKMP-BB@0x40 ]
+	10      (00000024) invoke-virtual       v10, v4, Ljava/lang/String;->charAt(I)C
+	11      (0000002a) move-result          v6
+	12      (0000002c) invoke-virtual       v9, v5, Ljava/lang/String;->charAt(I)C
+	13      (00000032) move-result          v7
+	14      (00000034) if-ne                v6, v7, +6
+
+searchKMP-BB@0x38 : [ searchKMP-BB@0x40 ]
+	15      (00000038) add-int/lit8         v4, v4, 1
+	16      (0000003c) add-int/lit8         v5, v5, 1
+
+searchKMP-BB@0x40 : [ searchKMP-BB@0x44 searchKMP-BB@0x52 ]
+	17      (00000040) if-ne                v4, v1, +9
+
+searchKMP-BB@0x44 : [ searchKMP-BB@0x20 ]
+	18      (00000044) add-int/lit8         v0, v0, 1
+	19      (00000048) add-int/lit8         v6, v4, -1
+	20      (0000004c) aget                 v4, v3, v6
+	21      (00000050) goto                 -18
+
+searchKMP-BB@0x52 : [ searchKMP-BB@0x56 searchKMP-BB@0x20 ]
+	22      (00000052) if-ge                v5, v2, -19
+
+searchKMP-BB@0x56 : [ searchKMP-BB@0x6a searchKMP-BB@0x20 ]
+	23      (00000056) invoke-virtual       v10, v4, Ljava/lang/String;->charAt(I)C
+	24      (0000005c) move-result          v6
+	25      (0000005e) invoke-virtual       v9, v5, Ljava/lang/String;->charAt(I)C
+	26      (00000064) move-result          v7
+	27      (00000066) if-eq                v6, v7, -23
+
+searchKMP-BB@0x6a : [ searchKMP-BB@0x6e searchKMP-BB@0x78 ]
+	28      (0000006a) if-eqz               v4, +7
+
+searchKMP-BB@0x6e : [ searchKMP-BB@0x20 ]
+	29      (0000006e) add-int/lit8         v6, v4, -1
+	30      (00000072) aget                 v4, v3, v6
+	31      (00000076) goto                 -2b
+
+searchKMP-BB@0x78 : [ searchKMP-BB@0x20 ]
+	32      (00000078) add-int/lit8         v5, v5, 1
+	33      (0000007c) goto                 -2e
+
+searchKMP-BB@0x7e : 
+	34      (0000007e) return               v0
+

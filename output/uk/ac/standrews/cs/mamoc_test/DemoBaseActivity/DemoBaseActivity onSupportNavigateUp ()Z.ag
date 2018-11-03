@@ -1,0 +1,12 @@
+# Luk/ac/standrews/cs/mamoc_test/DemoBaseActivity;->onSupportNavigateUp()Z [access_flags=public]
+#
+# Parameters:
+# local registers: v0...v1
+#
+# - return:boolean
+
+onSupportNavigateUp-BB@0x0 : 
+	0       (00000000) invoke-virtual       v1, Luk/ac/standrews/cs/mamoc_test/DemoBaseActivity;->onBackPressed()V
+	1       (00000006) const/4              v0, 1
+	2       (00000008) return               v0
+
