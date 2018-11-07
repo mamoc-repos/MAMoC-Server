@@ -2,20 +2,22 @@
 This is the server component of MAMoC, Multisite Adaptive Mobile Computation Offloading Framework 
 to offload compute-intensive tasks from mobile devices to more powerful surrogates including nearby devices, edge devices and remote cloud instances.
 
-##Setup
+## Setup
 
-It is tested on Ubuntu 16.04 and MacOS 10.12
+This setup is tested on Ubuntu 16.04 and MacOS 10.13
 
-The router can be hosted separately with the server. The configuration file of the crossbar router is found under mamoc_router directory.
+The server side of MAMoC contains two components: router and server. The router can be hosted separately with the server. 
+The configuration file of the crossbar router is found under mamoc_router directory.
 
 ### Requirements
 - Python >= 3.5
+- Crossbar
 - Docker Engine for running docker containers
 
 ### Docker
 
-You need to setup the router before running the server. In order to run the docker container for the router, navigate to `mamoc_router` 
-and start building the docker
+You need to run the router docker before running the server. In order to run the docker container for the router, 
+navigate to `mamoc_router` and start building the docker
 
 ``` 
 cd mamoc_router
@@ -57,9 +59,9 @@ cd mamoc_router
 crossbar start
 ```
 
-##Credits
-[1] Crossbar
 
-[2] Autobahn
+## Credits
 
-[3] OpenJDK Docker images
+[1] [Crossbar + Autobahn](https://crossbar.io/autobahn/)
+
+[2] [OpenJDK Docker images](https://hub.docker.com/_/openjdk/)

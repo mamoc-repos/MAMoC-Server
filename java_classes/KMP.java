@@ -1,26 +1,17 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
-
-
-
-
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 
 public class KMP {
 
 	public static String readResourceContent(String filePath){
-		File file = new File(filePath);
-		StringBuilder fileContents = new StringBuilder((int)file.length());
-		try (Scanner scanner = new Scanner(file)) {
-			while(scanner.hasNextLine()) {
-				fileContents.append(scanner.nextLine() + System.lineSeparator());
-			}
-		} catch (FileNotFoundException e) {
+		try {
+			return new String(Files.readAllBytes(Paths.get(filePath)));
+		} catch (IOException e) {
 			e.printStackTrace();
+			return null;		
 		}
-		return fileContents.toString();
 	}
 
 	public static void main(String[] args){

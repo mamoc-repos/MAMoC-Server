@@ -38,12 +38,8 @@ class ClientComponent(ApplicationSession):
 package uk.ac.standrews.cs.mamoc.SearchText;
 
 import uk.ac.st_andrews.cs.mamoc_client.Annotation.Offloadable;
-import uk.ac.st_andrews.cs.mamoc_client.Annotation.Parallelizable;
-import uk.ac.st_andrews.cs.mamoc_client.Annotation.ResourceDependent;
 
-@Offloadable
-@Parallelizable
-@ResourceDependent
+@Offloadable(resourceDependent = true, parallelizable = true)
 public class KMP {
 
     String content;
@@ -128,7 +124,7 @@ public class KMP {
 }
                         """,
                      "large",
-                     ["hell"])
+                     ["hi"])
 
         self.sub = await self.subscribe(on_event, "uk.ac.standrews.cs.mamoc.offloadingresult")
         print("Subscribed to uk.ac.standrews.cs.mamoc.offloading with {}".format(self.sub.id))

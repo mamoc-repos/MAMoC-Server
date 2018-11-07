@@ -1,4 +1,6 @@
 from os import environ
+
+import psutil as psutil
 from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
 
 from java_classes.JavaExecutor import JavaExecutor
@@ -24,7 +26,18 @@ class MamocServer(ApplicationSession):
     async def onJoin(self, details):
         print("Mamoc Server attached on {}".format(details.session))
 
-        async def on_event(source, rpcname, code, resourcename, params):
+        cpu = psutil.cpu_freq().max * psutil.cpu_count()
+        mem = round(psutil.virtual_memory().total / 1000000)
+        battery = psutil.sensors_battery().percent
+
+        print("total max cpu freq: ",  cpu)
+        print("memory: ", mem)
+        print("battery: ", battery)
+
+        self.publish('uk.ac.standrews.cs.mamoc.stats', cpu, mem, battery)
+        print("published server stats")
+
+        async def on_offloding_event(source, rpcname, code, resourcename, params):
             print("Received from: {} app".format(source))
             print("Received RCP name: {}".format(rpcname))
             print("Received the source code: {}".format(code))
@@ -37,7 +50,7 @@ class MamocServer(ApplicationSession):
                 code = self.addmainmethod(class_name, code, resourcename, params)  # Add the main method for java command
 
                 if resourcename != "None":
-                    code = "import java.io.File;\nimport java.io.FileNotFoundException;\nimport java.util.Scanner;\n" + code
+                    code = "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;" + code
                     code = self.addResourceCode(code)
 
                 with open("java_classes/{}.java".format(class_name), "w") as java_file:
@@ -69,7 +82,7 @@ class MamocServer(ApplicationSession):
             else:
                 print("unrecognized source!")
 
-        sub = await self.subscribe(on_event, "uk.ac.standrews.cs.mamoc.offloading")
+        sub = await self.subscribe(on_offloding_event, "uk.ac.standrews.cs.mamoc.offloading")
         print("Subscribed to uk.ac.standrews.cs.mamoc.offloading with {}".format(sub.id))
 
     def onDisconnect(self):
@@ -85,10 +98,7 @@ class MamocServer(ApplicationSession):
     def removeannotations(self, code):
         code = code.replace("import uk.ac.st_andrews.cs.mamoc_client.Annotation.Offloadable;", "")
         code = code.replace("@Offloadable", "")
-        code = code.replace("import uk.ac.st_andrews.cs.mamoc_client.Annotation.Parallelizable;", "")
-        code = code.replace("@Parallelizable", "")
-        code = code.replace("import uk.ac.st_andrews.cs.mamoc_client.Annotation.ResourceDependent;", "")
-        code = code.replace("@ResourceDependent", "")
+        code = code.replace("(resourceDependent = true, parallelizable = true)", "")
 
         code = code.replace("this = new Object();", "")  # remove this in constructor
         code = code.replace("new Object()", "this")  # sometimes the decompiler changes this to new Object()
@@ -140,14 +150,11 @@ class MamocServer(ApplicationSession):
         firstopenbrace = source.find("{") + 1  # we want to place the resource method after the first occurrence of braces
 
         resourcemethod = f"\n\n\tpublic static String readResourceContent(String filePath){{\n"
-        resourcemethod += "\t\tFile file = new File(filePath);\n"
-        resourcemethod += "\t\tStringBuilder fileContents = new StringBuilder((int)file.length());\n"
-        resourcemethod += "\t\ttry (Scanner scanner = new Scanner(file)) {\n"
-        resourcemethod += "\t\t\twhile(scanner.hasNextLine()) {\n"
-        resourcemethod += "\t\t\t\tfileContents.append(scanner.nextLine() + System.lineSeparator());\n\t\t\t}\n"
-        resourcemethod += "\t\t} catch (FileNotFoundException e) {\n"
-        resourcemethod += "\t\t\te.printStackTrace();\n\t\t}\n"
-        resourcemethod += "\t\treturn fileContents.toString();\n\t}"
+        resourcemethod += "\t\ttry {\n"
+        resourcemethod += "\t\t\treturn new String(Files.readAllBytes(Paths.get(filePath)));\n"
+        resourcemethod += "\t\t} catch (IOException e) {\n"
+        resourcemethod += "\t\t\te.printStackTrace();\n"
+        resourcemethod += "\t\t\treturn null;\t\t\n\t\t}\n\t}"
 
         return source[:firstopenbrace] + resourcemethod + source[firstopenbrace:]
 
