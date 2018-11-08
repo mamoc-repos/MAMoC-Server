@@ -12,5 +12,5 @@ setup(
                 'to run a static analysis on APKs and runs a partitioning algorithm on the method call graphs to output'
                 'the local and remote partitions of a mobile application',
     install_requires=['six', 'autobahn', 'networkx', 'metis', 'androguard', 'matplotlib', 'lxml',
-                                      'requests', 'psutil']
+                                      'requests']
 )

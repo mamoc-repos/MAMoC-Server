@@ -43,6 +43,13 @@ if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
 if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
 rm -r /root/.cache
 
+RUN apk add --no-cache build-base \
+&& apk add --no-cache linux-headers \
+&& apk add --no-cache python3-dev \
+&& pip3 install psutils \
+&& apk del build-base linux-headers python3-dev
+#&& rm -rf /var/cache/apk/*
+
 ### 4. Set JAVA_HOME
 ENV JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk"
 
