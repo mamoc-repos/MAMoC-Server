@@ -1,6 +1,6 @@
 
 
-class Translator(object):
+class Transformer(object):
 
     def __init__(self, code, resourcename, params):
         self.code = code

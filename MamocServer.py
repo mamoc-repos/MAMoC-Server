@@ -4,13 +4,13 @@ from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
 
 from java_classes.JavaExecutor import JavaExecutor
 from StatsCollector import StatsCollector
-from Translator import Translator
+from Transformer import Transformer
 
 
 def main():
     import six
 
-    url = environ.get("MAMOC_ROUTER", u"ws://localhost:8080/ws")
+    url = environ.get("MAMOC_ROUTER", u"ws://127.0.0.1:8080/ws")
     if six.PY2 and type(url) == six.binary_type:
         url = url.decode('utf8')
     realm = u"mamoc_realm"
@@ -38,7 +38,7 @@ class MamocServer(ApplicationSession):
             print("Received params: {}".format(params))
 
             if source == "Android":
-                code, class_name = Translator(code, resourcename, params).start()
+                code, class_name = Transformer(code, resourcename, params).start()
 
                 with open("java_classes/{}.java".format(class_name), "w") as java_file:
                     print("{}".format(code), file=java_file)

@@ -11,6 +11,6 @@ setup(
     description='MAMoC Server component for handling WAMP RPC calls and PubSub events. It also uses Androguard '
                 'to run a static analysis on APKs and runs a partitioning algorithm on the method call graphs to output'
                 'the local and remote partitions of a mobile application',
-    install_requires=['six', 'autobahn', 'networkx', 'metis', 'androguard', 'matplotlib', 'lxml',
-                                      'requests']
+    install_requires=['six', 'autobahn']  # keep it minimal for offload testing
+    # 'networkx', 'metis', 'androguard', 'matplotlib', 'lxml', 'requests'
 )

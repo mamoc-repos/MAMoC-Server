@@ -27,7 +27,7 @@ docker build -t mamoc_router Dockerfile .
 Once the router image is added to your docker images, run it as the following:
 
 ```
-docker run -it -d --name "mamoc-router" mamoc_router
+docker run -it -d -p 8080:8080 --name "mamoc-router" mamoc_router
 ```
 
 To run the server, in the main directory, build the docker
@@ -39,7 +39,7 @@ docker build -t mamoc_server Dockerfile .
 Then run the docker
 
 ```
-docker run -it -d --name "mamoc-server" --network="host" -p 8080:8080 mamoc_server
+docker run -it -d --network="host" -p 8080:8080 --name "mamoc-server" mamoc_server
 ```
 
 ### Running locally
@@ -47,6 +47,7 @@ In the main directory, run
 
 ```
 python setup.py install
+python app.py
 ```
 
 You need to make sure that the crossbar router is running before running the server.
