@@ -1,5 +1,4 @@
 import java.lang.reflect.Array;
-import org.antlr.runtime.ANTLRReaderStream;
 
 
 
@@ -8,19 +7,19 @@ public class Benchmark {
 	public static void main(String[] args){
 		System.out.print(new Benchmark().run());
 	}
+    private static final int FFT_SIZE = 1024;
+    private static final int LU_SIZE = 100;
     private static final double MIN_TIME = 2.0d;
     private static final int RANDOM_SEED = 101010;
-
-    public Benchmark() {
-        
-    }
+    private static final int SIZE_M = 100;
+    private static final int SIZE_NZ = 500;
+    private static final int SOR_SIZE = 100;
+    Random R = new Random(RANDOM_SEED);
 
     public double run() {
-        Random R = new Random(RANDOM_SEED);
-        double fftResult = this.measureFFT(ANTLRReaderStream.READ_BUFFER_SIZE, R);
-        double sorResult = measureSOR(100, R);
-        double montecarloResult = measureMonteCarlo(R);
-        return ((((fftResult + sorResult) + montecarloResult) + measureSparseMat(100, 2.47E-321d, R)) + measureLU(100, R)) / 5.0d;
+        double fftResult = this.measureFFT(FFT_SIZE, this.R);
+        double sorResult = measureSOR(SOR_SIZE, this.R);
+        return (((fftResult + sorResult) + measureMonteCarlo(this.R)) + measureLU(SOR_SIZE, this.R)) / 4.0d;
     }
 
     private double measureFFT(int N, Random R) {

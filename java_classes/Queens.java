@@ -6,10 +6,9 @@ public class Queens {
 	public static void main(String[] args){
 		new Queens(Integer.parseInt(args[0])).run();
 	}
-    int n = 13;
+    int n;
 
     public Queens(int N) {
-        
         this.n = N;
     }
 

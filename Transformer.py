@@ -25,7 +25,7 @@ class Transformer(object):
         return class_name
 
     def removeannotations(self, code):
-        code = code.replace("import uk.ac.st_andrews.cs.mamoc_client.Annotation.Offloadable;", "")
+        code = code.replace("import uk.ac.standrews.cs.mamoc_client.Annotation.Offloadable;", "")
         code = code.replace("@Offloadable", "")
         code = code.replace("(resourceDependent = true, parallelizable = true)", "")
 

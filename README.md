@@ -14,10 +14,20 @@ The configuration file of the crossbar router is found under mamoc_router direct
 - Crossbar
 - Docker Engine for running docker containers
 
-### Docker
+## Docker
 
-You need to run the router docker before running the server. In order to run the docker container for the router, 
-navigate to `mamoc_router` and start building the docker
+You can pull the docker images from Docker hub and run them on your server:
+
+```
+docker pull dawan/mamoc_router
+docker run -it -d --name "mamoc-router" -p 8080:8080 dawan/mamoc_router
+
+docker pull dawan/mamoc_server
+docker run --rm -it --name "mamoc-server" --network="host" dawan/mamoc_server
+
+```
+
+Alternatively, clone this git and navigate to `mamoc_router` and start building the docker
 
 ``` 
 cd mamoc_router
@@ -39,7 +49,7 @@ docker build -t mamoc_server Dockerfile .
 Then run the docker
 
 ```
-docker run -it -d --network="host" -p 8080:8080 --name "mamoc-server" mamoc_server
+docker run -it -d --network="host" --name "mamoc-server" mamoc_server
 ```
 
 ### Running locally

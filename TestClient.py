@@ -13,6 +13,14 @@ class ClientComponent(ApplicationSession):
     async def onJoin(self, details):
         print("session ready!")
 
+
+        try:
+            res = await self.call("wamp.registration.list")
+            print("list: {}".format(res))
+
+        except Exception as e:
+            print("call error: {0}".format(e))
+
         try:
             res = await self.call(self.rpcname, 13)
             print("Queens: {}".format(res))
@@ -37,7 +45,7 @@ class ClientComponent(ApplicationSession):
                      """
 package uk.ac.standrews.cs.mamoc.SearchText;
 
-import uk.ac.st_andrews.cs.mamoc_client.Annotation.Offloadable;
+import uk.ac.standrews.cs.mamoc_client.Annotation.Offloadable;
 
 @Offloadable(resourceDependent = true, parallelizable = true)
 public class KMP {
