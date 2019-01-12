@@ -1,0 +1,2 @@
+# Example of a `.gitattributes` file which reclassifies `.html` files as Python:
+*.html linguist-language=Python
