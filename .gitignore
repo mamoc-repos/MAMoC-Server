@@ -6,6 +6,8 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 .idea/
+# Byte-compiled / optimized / DLL files
+__pycache__/
 
 # User-specific stuff
 .idea/**/workspace.xml
