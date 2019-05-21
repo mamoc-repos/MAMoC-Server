@@ -1,6 +1,6 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.io.IOException;import uk.ac.st_andrews.cs.mamoc_client.Annotation.Offloadable;
+import java.io.IOException;
 
 
 public class KMP {
@@ -15,87 +15,60 @@ public class KMP {
 	}
 
 	public static void main(String[] args){
-		System.out.print(new KMP(readResourceContent("../data/large.txt"), args[0]).run());
+		System.out.print(new KMP(readResourceContent("../data/medium.txt"), args[0]).run());
 	}
-
     String content;
     String pattern;
 
-    public KMP(String content, String pat) {
+    public KMP(String content, String pattern) {
+        
         this.content = content;
-        this.pattern = pat;
+        this.pattern = pattern;
     }
 
     public int run() {
         int matches = 0;
-        int M = pattern.length();
-        int N = content.length();
-
-        // create lps[] that will hold the longest
-        // prefix suffix values for pattern
-        int lps[] = new int[M];
-        int j = 0; // index for pat[]
-
-        // Preprocess the pattern (calculate lps[] array)
-        computeLPSArray(pattern, M, lps);
-
-        int i = 0; // index for txt[]
+        int M = this.pattern.length();
+        int N = this.content.length();
+        int[] lps = new int[M];
+        int j = 0;
+        this.computeLPSArray(this.pattern, M, lps);
+        int i = 0;
         while (i < N) {
-            if (pattern.charAt(j) == content.charAt(i)) {
+            if (this.pattern.charAt(j) == this.content.charAt(i)) {
                 j++;
                 i++;
             }
             if (j == M) {
                 matches++;
                 j = lps[j - 1];
-            }
-
-            // mismatch after j matches
-            else if (i < N && pattern.charAt(j) != content.charAt(i)) {
-                // Do not match lps[0..lps[j-1]] characters,
-                // they will match anyway
-                if (j != 0)
+            } else if (i < N && this.pattern.charAt(j) != this.content.charAt(i)) {
+                if (j != 0) {
                     j = lps[j - 1];
-                else
-                    i = i + 1;
+                } else {
+                    i++;
+                }
             }
         }
-
         return matches;
     }
 
-    private void computeLPSArray(String pat, int M, int lps[])
-    {
-        // length of the previous longest prefix suffix
+    private void computeLPSArray(String pat, int M, int[] lps) {
         int len = 0;
         int i = 1;
-        lps[0] = 0; // lps[0] is always 0
-
-        // the loop calculates lps[i] for i = 1 to M-1
+        lps[0] = 0;
         while (i < M) {
             if (pat.charAt(i) == pat.charAt(len)) {
                 len++;
                 lps[i] = len;
                 i++;
-            }
-            else // (pat[i] != pat[len])
-            {
-                // This is tricky. Consider the example.
-                // AAACAAAA and i = 7. The idea is similar
-                // to search step.
-                if (len != 0) {
-                    len = lps[len - 1];
-
-                    // Also, note that we do not increment
-                    // i here
-                }
-                else // if (len == 0)
-                {
-                    lps[i] = len;
-                    i++;
-                }
+            } else if (len != 0) {
+                len = lps[len - 1];
+            } else {
+                lps[i] = len;
+                i++;
             }
         }
     }
 }
-                        
+

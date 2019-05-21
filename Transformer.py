@@ -28,9 +28,10 @@ class Transformer(object):
         code = code.replace("import uk.ac.standrews.cs.mamoc_client.Annotation.Offloadable;", "")
         code = code.replace("@Offloadable", "")
         code = code.replace("(resourceDependent = true, parallelizable = true)", "")
+        code = code.replace("(parallelizable = true, resourceDependent = true)", "")
 
-        code = code.replace("this = new Object();", "")  # remove this in constructor
-        code = code.replace("new Object()", "this")  # sometimes the decompiler changes this to new Object()
+        code = code.replace("this = new Object();", "")  # remove this in constructor added by dex decompiler
+        code = code.replace("new Object()", "this")  # sometimes the dex decompiler changes this to new Object()
 
         return code
 

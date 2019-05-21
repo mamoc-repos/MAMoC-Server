@@ -1,8 +1,9 @@
 from os import environ
 
 from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
+from autobahn.wamp import ApplicationError
 
-from java_classes.JavaExecutor import JavaExecutor
+from JavaExecutor import JavaExecutor
 from StatsCollector import StatsCollector
 from Transformer import Transformer
 
@@ -23,6 +24,9 @@ class MamocServer(ApplicationSession):
     def __init__(self, config=None):
         ApplicationSession.__init__(self, config)
         self.traceback_app = True
+        self.executor = JavaExecutor()
+        self.class_name = ""
+        self.params = ""
 
     async def onJoin(self, details):
         print("Mamoc Server attached on {}".format(details.session))
@@ -38,13 +42,13 @@ class MamocServer(ApplicationSession):
             print("Received params: {}".format(params))
 
             if source == "Android":
-                code, class_name = Transformer(code, resourcename, params).start()
+                self.params = params
+                code, self.class_name = Transformer(code, resourcename, params).start()
 
-                with open("java_classes/{}.java".format(class_name), "w") as java_file:
+                with open("java_classes/{}.java".format(self.class_name), "w") as java_file:
                     print("{}".format(code), file=java_file)
 
-                executor = JavaExecutor()
-                result = executor.startExecuting(class_name, "{}.java".format(class_name), params)
+                result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
 
                 print(result)
 
@@ -53,16 +57,17 @@ class MamocServer(ApplicationSession):
                     output = result[0]
                     duration = result[1]
 
-                    if output == b'':  # empty byte array
-                        output = "nothing"
-                    else:
-                        output = output.decode("utf-8")
+                    output = self.decode_bytes(output)
 
                     self.publish('uk.ac.standrews.cs.mamoc.offloadingresult', output, duration)
 
                     # register the procedure for next time rpc request
-                    await self.register(executor.execute_java(class_name, params), rpcname)
-                    print("ServerComponent: {}  registered!".format(rpcname))
+                    try:
+                        re = await self.register(self.execute_java, rpcname)
+                    except ApplicationError as e:
+                        print("could not register procedure: {0}".format(e))
+                    else:
+                        print("{} endpoints registered".format(re))
 
             elif source == "iOS":
                 print("received from iOS app")
@@ -71,6 +76,19 @@ class MamocServer(ApplicationSession):
 
         sub = await self.subscribe(on_offloding_event, "uk.ac.standrews.cs.mamoc.offloading")
         print("Subscribed to uk.ac.standrews.cs.mamoc.offloading with {}".format(sub.id))
+
+    def execute_java(self, input):
+        print("execute_java {} {}".format(self.class_name, input))
+        output, duration, errors = self.executor.execute_java(self.class_name, input)
+        output = self.decode_bytes(output)
+        return output, duration, errors
+
+    def decode_bytes(self, encoded):
+        if encoded == b'':  # empty byte array
+            encoded = "nothing"
+        else:
+            encoded = encoded.decode("utf-8")
+        return encoded
 
     def onDisconnect(self):
         print("disconnected")

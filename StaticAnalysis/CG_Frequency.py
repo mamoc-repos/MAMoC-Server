@@ -2,15 +2,16 @@ import time
 from androguard.misc import AnalyzeAPK
 
 
-def frequency(callgraph, api_freq):
-    # for c in dx.get_classes():
-    #     for key, items in c.xrefto.items():
-    #         for item in items:
-    #             kind, method, offset = item
-    #             if method in api_freq:
-    #                 api_freq[method] += 1
-    #             else:
-    #                 api_freq[method] = 1
+def frequency(dx, callgraph):
+    api_freq = dict()
+    for c in dx.get_classes():
+        for key, items in c.xrefto.items():
+            for item in items:
+                kind, method, offset = item
+                if method in api_freq:
+                    api_freq[method] += 1
+                else:
+                    api_freq[method] = 1
 
     for (m1, m2) in callgraph.edges():
 
@@ -19,21 +20,21 @@ def frequency(callgraph, api_freq):
         else:
             api_freq[(m1, m2)] = 1
 
+    return api_freq
+
 
 def filter_methods(dx):
     callgraph = dx.get_call_graph()
 
-    platform_file = open("Android-API-Files/android_platform_packages.txt", "r")
+    platform_file = open("../Android-API-Files/android_platform_packages.txt", "r")
     platform_lines = platform_file.read().splitlines()
     platform_list = ["L" + p.replace('.', '/') for p in platform_lines]
 
-    support_file = open("Android-API-Files/android_support_packages.txt", "r")
+    support_file = open("../Android-API-Files/android_support_packages.txt", "r")
     support_lines = support_file.read().splitlines()
     support_list = ["L" + s.replace('.', '/') for s in support_lines]
 
     api_candidates = platform_list + support_list
-
-    # print(api_candidates)
 
     filtered_callgraph = callgraph.copy()
 
@@ -43,20 +44,22 @@ def filter_methods(dx):
                 filtered_callgraph.remove_edge(m1, m2)
                 continue
 
+    print(filtered_callgraph)
     return filtered_callgraph
 
 
 def main():
     tic = time.time()
-    a, d, dx = AnalyzeAPK('APK/mamoc_test.apk')
+    a, d, dx = AnalyzeAPK('../APK/mamoc_test.apk')
     dx.create_xref()
 
-    app_methods = dict()
     filtered_callgraph = filter_methods(dx)
-    # frequency(filtered_callgraph, app_methods)
+
+    freq = frequency(dx, filtered_callgraph)
+    print(freq)
 
     method_integer_dict = dict()
-    file = open('output/methodCalls.txt', 'w')
+    file = open('../output/methodCalls.txt', 'w')
     i = 1
     # for (m1, m2), count in sorted(app_methods.items(), key=lambda b: b[1], reverse=True):
     #     file.write(str(m1) + "," + str(m2) + "," + str(count) + "\n")

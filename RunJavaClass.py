@@ -16,16 +16,14 @@ class RunJavaClass:
         jpype.startJVM(jpype.get_default_jvm_path(), '-ea',
                        '-Djava.class.path=/Users/dawan/PycharmProjects/mamoc_server/java_classes')
 
-        print(jpype.get_default_jvm_path())
+        # print(jpype.get_default_jvm_path())
 
         # hey = jpype.java.lang.System.out.println("hello world")
         # print(hey)
 
         # testPkg = jpype.JPackage('uk').standrews.cs.mamoc
 
-        # MergeTest = testPkg.MergeSort
-
-        merge = jpype.JClass("MergeSort")
+        quick = jpype.JClass("QuickSort")
 
         tic = time.time()
 
@@ -33,7 +31,7 @@ class RunJavaClass:
         with open(text_file, "r") as file:
             content = file.read().split(" ")
 
-        merge.mergeSort(content)  # uk.ac.standrews.cs.mamoc.NQueens
+        quick.quickSort(content)  # uk.ac.standrews.cs.mamoc.NQueens
 
         duration = time.time() - tic
         print(duration)

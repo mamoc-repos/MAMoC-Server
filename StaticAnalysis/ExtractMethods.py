@@ -60,7 +60,7 @@ CFG = nx.DiGraph()
 
 # print(dx.get_class_analysis("Luk/ac/standrews/cs/mamoc_test/NQueens/Queens;").get_vm_class().source())
 
-for m in dx.find_methods(classname="Luk/ac/standrews/cs/mamoc/SearchText/SearchActivity;"):  # classname="Lco/arsatech/nqueens/Main;"
+for m in dx.find_methods(classname="Luk/ac/standrews/cs/mamoc/SearchText/SearchActivity;"):
     orig_method = m.get_method()
     print("Found Method --> {}".format(orig_method))
     # orig_method might be a ExternalMethod too...
