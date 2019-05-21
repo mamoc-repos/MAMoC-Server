@@ -1,37 +1,22 @@
 # MAMoC-Server
-This is the server component of MAMoC, Multisite Adaptive Mobile Computation Offloading Framework 
-to offload compute-intensive tasks from mobile devices to more powerful surrogates including nearby devices, edge devices and remote cloud instances.
+This is the server component of MAMoC, Multisite Adaptive Mobile Computation Offloading Framework to offload compute-intensive tasks from mobile devices to more powerful surrogates including nearby devices, edge devices and remote cloud instances.
 
-## Setup
-
-This setup is tested on Ubuntu 16.04 and MacOS 10.13
-
-The server side of MAMoC contains two components: router and server. The router can be hosted separately with the server. 
-The configuration file of the crossbar router is found under mamoc_router directory.
-
-### Requirements
-- Python >= 3.5
-- Crossbar
-- Docker Engine for running docker containers
+The server side of MAMoC contains two components: `mamoc_router` and `mamoc_server`. The router is decoupled and can be hosted separately with the server.
 
 ## Docker
-
 You can pull the docker images from Docker hub and run them on your server:
-
 ```
 docker pull dawan/mamoc_router
 docker run -it -d --name "mamoc-router" -p 8080:8080 dawan/mamoc_router
 
 docker pull dawan/mamoc_server
 docker run --rm -it --name "mamoc-server" --network="host" dawan/mamoc_server
-
 ```
 
 Alternatively, clone this git and navigate to `mamoc_router` and start building the docker
-
 ``` 
 cd mamoc_router
-docker build -t mamoc_router Dockerfile .
+docker build -t mamoc_router .
 ```
 
 Once the router image is added to your docker images, run it as the following:
@@ -43,7 +28,7 @@ docker run -it -d -p 8080:8080 --name "mamoc-router" mamoc_router
 To run the server, in the main directory, build the docker
 
 ```
-docker build -t mamoc_server Dockerfile .
+docker build -t mamoc_server .
 ```
 
 Then run the docker
@@ -51,28 +36,34 @@ Then run the docker
 ```
 docker run -it -d --network="host" --name "mamoc-server" mamoc_server
 ```
+## Testing it locally
+The main usage of MAMoC server is to serve the offloading requests from the mobile applications built on top of [MAMoC framework](https://github.com/dawand/MAMoC-Android).
 
-### Running locally
-In the main directory, run 
+However, you can run the following python client program to test its functionality:
 
+```python
+python TestClient.py
 ```
-python setup.py install
-python app.py
-```
 
-You need to make sure that the crossbar router is running before running the server.
+Make sure both the server and the router components are running and listening to requests at `localhost:8080`
+
+## Running locally
+You need to make sure that the crossbar router is running before running the server. The configuration file of the crossbar router is found under mamoc_router directory.
 
 Enter the following in the terminal to get the router running
-
-```
+```python
 pip install crossbar
 cd mamoc_router
 crossbar start
 ```
 
+In order to run the server, type in the main directory: 
+```python
+python setup.py install
+python app.py
+```
 
 ## Credits
-
 [1] [Crossbar + Autobahn](https://crossbar.io/autobahn/)
 
 [2] [OpenJDK Docker images](https://hub.docker.com/_/openjdk/)
