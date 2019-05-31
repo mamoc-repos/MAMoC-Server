@@ -7,17 +7,30 @@ class Transformer(object):
         self.resourcename = resourcename
         self.params = params
 
-    def start(self):
-        code = self.code[self.code.find('import'):]  # remove the package name
-        code = self.removeannotations(code)  # remove the annotations as we do need them anymore
-        class_name = self.findclassname(code)  # identify the class name for javac command
-        code = self.addmainmethod(class_name, code, self.resourcename, self.params)  # Add the main method for java command
+    def start(self, type="class"):
+        if type == "class":
+            code = self.code[self.code.find('import'):]  # remove the package name
+            code = self.removeannotations(code)  # remove the annotations as we do need them anymore
+            class_name = self.findclassname(code)  # identify the class name for javac command
+            code = self.addmainmethod(class_name, code, self.resourcename, self.params)  # Add the main method for java command
 
-        if self.resourcename != "None":
-            code = "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;" + code
-            code = self.addResourceCode(code)
+            if self.resourcename != "None":
+                code = "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;" + code
+                code = self.addResourceCode(code)
 
-        return code, class_name
+            return code, class_name
+        elif type == "method":
+            code = self.removeannotations(self.code)  # remove the annotations as we do need them anymore
+            code = self.generateclass(code, self.resourcename, self.params)
+
+            if self.resourcename != "None":
+                code = "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;" + code
+                code = self.addResourceCode(code)
+
+            return code, "TestRunner"
+        else:
+            print("Unknown offloading type!")
+            return
 
     def findclassname(self, source):
         list_of_words = source.split()
@@ -26,9 +39,9 @@ class Transformer(object):
 
     def removeannotations(self, code):
         code = code.replace("import uk.ac.standrews.cs.mamoc_client.Annotation.Offloadable;", "")
+        annotation_line = code.split("@Offloadable")[-1].split("\n", 1)[0]
         code = code.replace("@Offloadable", "")
-        code = code.replace("(resourceDependent = true, parallelizable = true)", "")
-        code = code.replace("(parallelizable = true, resourceDependent = true)", "")
+        code = code.replace(annotation_line, "")
 
         code = code.replace("this = new Object();", "")  # remove this in constructor added by dex decompiler
         code = code.replace("new Object()", "this")  # sometimes the dex decompiler changes this to new Object()
@@ -87,3 +100,17 @@ class Transformer(object):
         resourcemethod += "\t\t\treturn null;\t\t\n\t\t}\n\t}"
 
         return source[:firstopenbrace] + resourcemethod + source[firstopenbrace:]
+
+    def generateclass(self, source, resourcename, params):
+        class_name = "TestRunner"
+        method_name = source.split('(', 1)[0].split(" ")[-1]
+        print("name: " + method_name)
+
+        class_header = f"public class {class_name}{{\n\t"
+        mainmethod = f"\n\n\tpublic static void main(String[] args){{\n\t\t"
+
+        return_type = source.split(f"{method_name}", 1)[0].split(" ")[-2]  # get the return type of the method
+
+        mainmethod += f"new {class_name}().{method_name}(); \n\t}}"
+
+        return class_header + mainmethod + source + "\n}"
