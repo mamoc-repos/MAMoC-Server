@@ -47,7 +47,7 @@ from os import environ
 
 from autobahn.asyncio.component import Component, run
 
-rpcname = "uk.ac.standrews.cs.mamoc.SearchText.KMP"
+class_id = "uk.ac.standrews.cs.mamoc.SearchText.KMP"
 class_code = """
 package uk.ac.standrews.cs.mamoc_demo.SearchText;
 
@@ -136,7 +136,14 @@ public class KMP {
     }
 }
 """
-
+method_id = "uk.ac.standrews.cs.mamoc.say_hello"
+method_code = """
+@Offloadable(resourceDependent = false, parallelizable = true)
+public void say_hello(){
+    String hello = "Hello, World";
+    System.out.print(hello);
+}
+"""
 component = Component(
     # you can configure multiple transports; here we use two different
     # transports which both exist in the mamoc router
@@ -172,7 +179,7 @@ component = Component(
 @component.on_join
 async def join(session, details):
     try:
-        res = await session.call(rpcname, ["hi"])
+        res = await session.call(class_id, ["hi"])
         if res[2] is None:
             print("output: {}".format(res[0]))
             print("duration: {}".format(res[1]))
@@ -182,7 +189,10 @@ async def join(session, details):
     except Exception as e:
         print("call error: {0}".format(e))
         # if the RPC is not registered in the server, publish the source code
-        session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", rpcname, class_code, "large", ["hi"])
+        # Testing class offloading
+        session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", class_id, class_code, "large", ["hi"])
+        # Testing method offloading
+        session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", method_id, method_code, "None", ["hi"])
 
     # async def on_event(result, duration):
     #     await self.sub.unsubscribe()
