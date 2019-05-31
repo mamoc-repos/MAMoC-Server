@@ -85,3 +85,9 @@ fabric.properties
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/pycharm
+
+# ignore the saved APK files
+APK/*
+
+# ignore the generated Java classes
+java_classes/*
