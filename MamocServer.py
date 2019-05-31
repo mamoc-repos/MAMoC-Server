@@ -44,37 +44,35 @@ class MamocServer(ApplicationSession):
             if source == "Android":
                 self.params = params
 
-                print(code.split(' ', 1)[0])
-
                 # if it is a class, it must start with package keyword
                 if code.strip().split(' ', 1)[0] == "package":
                     code, self.class_name = Transformer(code, resourcename, params).start()
-
-                    with open("java_classes/{}.java".format(self.class_name), "w") as java_file:
-                        print("{}".format(code), file=java_file)
-
-                    result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
-
-                    print(result)
-
-                    if result:  # if building and execution were successful
-                        # send back output and duration in seconds
-                        output = result[0]
-                        duration = result[1]
-
-                        output = self.decode_bytes(output)
-
-                        self.publish('uk.ac.standrews.cs.mamoc.offloadingresult', output, duration)
-
-                        # register the procedure for next time rpc request
-                        try:
-                            re = await self.register(self.execute_java, rpcname)
-                        except ApplicationError as e:
-                            print("could not register procedure: {0}".format(e))
-                        else:
-                            print("{} endpoints registered".format(re))
                 else:
-                    print("Class offloading did not work!")
+                    code, self.class_name = Transformer(code, resourcename, params).start(type="method")
+
+                with open("java_classes/{}.java".format(self.class_name), "w") as java_file:
+                    print("{}".format(code), file=java_file)
+
+                result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
+
+                print(result)
+
+                if result:  # if building and execution were successful
+                    # send back output and duration in seconds
+                    output = result[0]
+                    duration = result[1]
+
+                    output = self.decode_bytes(output)
+
+                    self.publish('uk.ac.standrews.cs.mamoc.offloadingresult', output, duration)
+
+                    # register the procedure for next time rpc request
+                    try:
+                        re = await self.register(self.execute_java, rpcname)
+                    except ApplicationError as e:
+                        print("could not register procedure: {0}".format(e))
+                    else:
+                        print("{} endpoints registered".format(re))
 
             elif source == "iOS":
                 print("received from iOS app")
