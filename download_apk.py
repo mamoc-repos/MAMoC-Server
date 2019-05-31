@@ -8,6 +8,7 @@
    This script scraps https://apkpure.com to get the apk download link
    Make sure you have BeautifulSoup and urllib libraries
 """
+import os
 
 from bs4 import BeautifulSoup
 from urllib.parse import quote_plus
@@ -37,7 +38,8 @@ def download(link):
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) '
                           'Version/9.1.2 Safari/601.7.5 '
         })
-        with open(link.split('/')[-1] + '.apk', 'wb') as file:
+        apk_file = os.path.join("./APK", link.split('/')[-1] + '.apk')
+        with open(apk_file, 'wb') as file:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     file.write(chunk)
