@@ -1,49 +1,4 @@
-from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
-
-from os import environ
-
-
-# class ClientComponent(ApplicationSession):
-#
-#     def __init__(self, config=None):
-#         ApplicationSession.__init__(self, config)
-#         self.traceback_app = True
-#         self.rpcname = "uk.ac.standrews.cs.mamoc.SearchText.KMP"
-
-# async def onJoin(self, details):
-#     print("session ready!")
-#
-#     try:
-#         res = await self.call(self.rpcname, ["hi"])
-#         print("KMP: {}".format(res))
-#
-#     except Exception as e:
-#         print("call error: {0}".format(e))
-#         # if the RPC is not registered in the server, publish the source code
-#         self.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", self.rpcname, self.code, "large", ["hi"])
-#
-#     async def on_event(result, duration):
-#         print("execution returned {} took {} seconds".format(result, duration))
-#         await self.sub.unsubscribe()
-#
-#         self.sub = await self.subscribe(self.on_event, "uk.ac.standrews.cs.mamoc.offloadingresult")
-#         print("Subscribed to uk.ac.standrews.cs.mamoc.offloading with {}".format(self.sub.id))
-#
-# def onDisconnect(self):
-#     print("disconnected")
-
-
-# if __name__ == '__main__':
-#     import six
-#
-#     url = environ.get("MAMOC_ROUTER", u"ws://127.0.0.1:8080/ws")
-#     # url = environ.get("MAMOC_ROUTER", u"wss://djs21.host.cs.st-andrews.ac.uk/offload/ws")
-#     if six.PY2 and type(url) == six.binary_type:
-#         url = url.decode('utf8')
-#     realm = u"mamoc_realm"
-#     runner = ApplicationRunner(url, realm)
-#     runner.run(ClientComponent)
-
+from sys import exit
 
 from autobahn.asyncio.component import Component, run
 
@@ -136,6 +91,7 @@ public class KMP {
     }
 }
 """
+
 method_id = "uk.ac.standrews.cs.mamoc.say_hello"
 method_code = """
 @Offloadable(resourceDependent = false, parallelizable = true)
@@ -144,6 +100,7 @@ public void say_hello(){
     System.out.print(hello);
 }
 """
+
 component = Component(
     # you can configure multiple transports; here we use two different
     # transports which both exist in the mamoc router
@@ -178,6 +135,35 @@ component = Component(
 
 @component.on_join
 async def join(session, details):
+
+    print("joined {}: {}".format(session, details))
+
+    while True:
+        choice = present_menu()
+
+        if choice == 1:
+            await class_offloading(session)
+        elif choice == 2:
+            await method_offloading(session)
+        elif choice == 3:
+            exit()
+
+
+def present_menu():
+    print("\t1. Class offloading")
+    print("\t2. Method offloading")
+    print("\t3. Quit")
+
+    choice = int(input("\nPlease select one of the three options "))
+
+    while choice < 1 or choice > 3:
+        print("The selection provided is invalid.")
+        choice = int(input("\nPlease select one of the three options: \n"))
+
+    return choice
+
+
+async def class_offloading(session):
     try:
         res = await session.call(class_id, ["hi"])
         if res[2] is None:
@@ -185,33 +171,31 @@ async def join(session, details):
             print("duration: {}".format(res[1]))
         else:
             print("RPC execution error")
-
     except Exception as e:
-        print("call error: {0}".format(e))
+        print("class call error: {0}".format(e))
+        # if the RPC is not registered in the server, publish the source code
+        # Testing method offloading
+        session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", class_id, class_code, "large", ["hi"])
+
+
+async def method_offloading(session):
+    try:
+        res = await session.call(method_id, ["hi"])
+        if res[2] is None:
+            print("output: {}".format(res[0]))
+            print("duration: {}".format(res[1]))
+        else:
+            print("RPC execution error")
+    except Exception as e:
+        print("method call error: {0}".format(e))
         # if the RPC is not registered in the server, publish the source code
         # Testing class offloading
-        session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", class_id, class_code, "large", ["hi"])
-        # Testing method offloading
         session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", method_id, method_code, "None", ["hi"])
-
-    # async def on_event(result, duration):
-    #     await self.sub.unsubscribe()
-    #
-    #     self.sub = await self.subscribe(self.on_event, )
-    #     print("Subscribed to uk.ac.standrews.cs.mamoc.offloading with {}".format(self.sub.id))
-
-    print("joined {}: {}".format(session, details))
-    # await sleep(1)
-    # print("Calling 'com.example'")
-    # res = await session.call(u"example.foo", 42, something="nothing")
-    # print("Result: {}".format(res))
-    # await session.leave()
 
 
 @component.subscribe("uk.ac.standrews.cs.mamoc.offloadingresult")
 async def result_returned(result, duration):
     print("execution returned {} took {} seconds".format(result, duration))
-
 
 if __name__ == "__main__":
     run([component])
