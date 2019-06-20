@@ -38,15 +38,15 @@ You need to make sure that the crossbar router is running before running the ser
 
 Enter the following in the terminal to get the router running
 ```python
-pip install crossbar
+pip3 install crossbar
 cd mamoc_router
 crossbar start
 ```
 
 In order to run the server, type in the main directory: 
 ```python
-python setup.py install
-python app.py
+sudo python3 setup.py install
+python3 app.py
 ```
 
 ### Docker
