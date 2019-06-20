@@ -18,10 +18,16 @@ docker run --rm -it --name "mamoc-server" --network="host" dawan/mamoc_server
 ### Client
 The main usage of MAMoC server is to serve the offloading requests from the mobile applications built on top of [MAMoC framework](https://github.com/dawand/MAMoC-Android).
 
-However, you can run the following python client program to test its functionality:
+To install the required libraries, run the following:
 
 ```python
-python TestClient.py
+sudo python3 setup.py install
+```
+
+Then, you can run the following python client program to test its functionality:
+
+```python
+python3 TestClient.py
 ```
 
 Make sure both the server and the router components are running and listening to requests at `localhost:8080`
