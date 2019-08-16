@@ -91,3 +91,8 @@ APK/*
 
 # ignore the generated Java classes
 java_classes/*
+
+# ignore the setup.py generated files
+./build
+./dist
+MAMoC_Server.egg-info/
