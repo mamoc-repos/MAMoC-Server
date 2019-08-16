@@ -30,6 +30,8 @@ def filter_methods(dx):
     platform_lines = platform_file.read().splitlines()
     platform_list = ["L" + p.replace('.', '/') for p in platform_lines]
 
+    # print(platform_list)
+
     support_file = open("../Android-API-Files/android_support_packages.txt", "r")
     support_lines = support_file.read().splitlines()
     support_list = ["L" + s.replace('.', '/') for s in support_lines]
@@ -38,40 +40,48 @@ def filter_methods(dx):
 
     filtered_callgraph = callgraph.copy()
 
-    for (m1, m2) in callgraph.edges():
-            if m1.get_class_name().startswith(tuple(api_candidates)) or \
-                    m2.get_class_name().startswith(tuple(api_candidates)):
-                filtered_callgraph.remove_edge(m1, m2)
-                continue
+    print(filtered_callgraph.number_of_edges())
 
-    print(filtered_callgraph)
+    for (m1, m2) in callgraph.edges():
+        if m1.get_class_name().startswith(tuple(api_candidates)) or m2.get_class_name().startswith(tuple(api_candidates)):
+            filtered_callgraph.remove_edge(m1, m2)
+            # continue
+            print("removed " + m1.get_class_name() + " AND " + m2.get_class_name())
+
+    print(filtered_callgraph.number_of_edges())
     return filtered_callgraph
 
 
 def main():
     tic = time.time()
-    a, d, dx = AnalyzeAPK('../APK/mamoc_test.apk')
+    # a, d, dx = AnalyzeAPK('../APK/org.moire.opensudoku.apk')
+    a, d, dx = AnalyzeAPK('../APK/hello-world.apk')
     dx.create_xref()
 
     filtered_callgraph = filter_methods(dx)
 
-    freq = frequency(dx, filtered_callgraph)
-    print(freq)
+    print(filtered_callgraph.number_of_edges())
 
-    method_integer_dict = dict()
-    file = open('../output/methodCalls.txt', 'w')
-    i = 1
-    # for (m1, m2), count in sorted(app_methods.items(), key=lambda b: b[1], reverse=True):
-    #     file.write(str(m1) + "," + str(m2) + "," + str(count) + "\n")
-    for (m1, m2) in filtered_callgraph.edges():
-        if m1 not in method_integer_dict:
-            method_integer_dict[m1] = i
-            i += 1
-        if m2 not in method_integer_dict:
-            method_integer_dict[m2] = i
-            i += 1
-        file.write(str(method_integer_dict.get(m1)) + "," + str(method_integer_dict.get(m2)) + "\n")
-    file.close()
+    freq = frequency(dx, filtered_callgraph)
+    # print(sorted(freq, key=freq.get, reverse=True))
+
+    for w in sorted(freq, key=freq.get, reverse=True):
+        print(w, freq[w])
+
+    # method_integer_dict = dict()
+    # file = open('../output/methodCalls.txt', 'w')
+    # i = 1
+    # # for (m1, m2), count in sorted(app_methods.items(), key=lambda b: b[1], reverse=True):
+    # #     file.write(str(m1) + "," + str(m2) + "," + str(count) + "\n")
+    # for (m1, m2) in filtered_callgraph.edges():
+    #     if m1 not in method_integer_dict:
+    #         method_integer_dict[m1] = i
+    #         i += 1
+    #     if m2 not in method_integer_dict:
+    #         method_integer_dict[m2] = i
+    #         i += 1
+    #     file.write(str(method_integer_dict.get(m1)) + "," + str(method_integer_dict.get(m2)) + "\n")
+    # file.close()
 
     # for (m1, m2) in filtered_callgraph.edges():
     #
