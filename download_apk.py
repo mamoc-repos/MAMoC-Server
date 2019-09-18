@@ -6,7 +6,8 @@
 
    Download APK files from Google Play Store with Python
    This script scraps https://apkpure.com to get the apk download link
-   Make sure you have BeautifulSoup and urllib libraries
+
+   Required libraries: BeautifulSoup and urllib
 """
 import os
 
@@ -14,11 +15,13 @@ from bs4 import BeautifulSoup
 from urllib.parse import quote_plus
 import requests
 
+useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 ' \
+            'Safari/601.7.5 '
+
 
 def search(query):
     res = requests.get('https://apkpure.com/search?q={}&region='.format(quote_plus(query)), headers={
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) '
-                      'Version/9.1.2 Safari/601.7.5 '
+        'User-Agent': useragent
     }).text
     soup = BeautifulSoup(res, "html.parser")
     search_result = soup.find('div', {'id': 'search-res'}).find('dl', {'class': 'search-dl'})
@@ -29,8 +32,7 @@ def search(query):
 
 def download(link):
     res = requests.get(link + '/download?from=details', headers={
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) '
-                      'Version/9.1.2 Safari/601.7.5 '
+        'User-Agent': useragent
     }).text
     soup = BeautifulSoup(res, "html.parser").find('a', {'id': 'download_link'})
     if soup['href']:
