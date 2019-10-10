@@ -11,12 +11,19 @@ from Transformer import Transformer
 def main():
     import six
 
-    url = environ.get("MAMOC_ROUTER", u"ws://127.0.0.1:8080/ws")
+    host = "127.0.0.1"
+    port = "8080"
+
+    url = environ.get("MAMOC_ROUTER", u"ws://"+host+":"+port+"/ws")
     if six.PY2 and type(url) == six.binary_type:
         url = url.decode('utf8')
     realm = u"mamoc_realm"
     runner = ApplicationRunner(url, realm)
-    runner.run(MamocServer)
+    try:
+        runner.run(MamocServer)
+    except OSError:
+        print("Failed to connect to Router!")
+        print("Are you sure there is a router component running at: " + host + " at port: " + port + "?")
 
 
 class MamocServer(ApplicationSession):
