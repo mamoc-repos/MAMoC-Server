@@ -165,32 +165,31 @@ def present_menu():
 
 async def class_offloading(session):
     try:
-        res = await session.call(class_id, ["hi"])
-        if res[2] is None:
-            print("output: {}".format(res[0]))
-            print("duration: {}".format(res[1]))
-        else:
-            print("RPC execution error")
+        await print_result(class_id, session)
     except Exception as e:
         print("class call error: {0}".format(e))
         # if the RPC is not registered in the server, publish the source code
-        # Testing method offloading
         session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", class_id, class_code, "large", ["hi"])
+        await print_result(class_id, session)
+
+
+async def print_result(id, session):
+    res = await session.call(id, ["hi"])
+    if res[2] is None:
+        print("output: {}".format(res[0]))
+        print("duration: {}".format(res[1]))
+    else:
+        print("RPC execution error")
 
 
 async def method_offloading(session):
     try:
-        res = await session.call(method_id, ["hi"])
-        if res[2] is None:
-            print("output: {}".format(res[0]))
-            print("duration: {}".format(res[1]))
-        else:
-            print("RPC execution error")
+        await print_result(method_id, session)
     except Exception as e:
         print("method call error: {0}".format(e))
         # if the RPC is not registered in the server, publish the source code
-        # Testing class offloading
         session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", method_id, method_code, "None", ["hi"])
+        await print_result(method_id, session)
 
 
 @component.subscribe("uk.ac.standrews.cs.mamoc.offloadingresult")

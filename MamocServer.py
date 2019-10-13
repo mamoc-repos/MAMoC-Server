@@ -1,4 +1,4 @@
-from os import environ
+from os import environ, path
 
 from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
 from autobahn.wamp import ApplicationError
@@ -51,21 +51,25 @@ class MamocServer(ApplicationSession):
             if source == "Android":
                 self.params = params
 
-                # if it is a class, it must start with package keyword
-                if code.strip().split(' ', 1)[0] == "package":
-                    code, self.class_name = Transformer(code, resourcename, params).start()
+                # Java file already cached in MAMoC Repository
+                if path.exists("java_classes/{}.java".format(self.class_name)):
+                    result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
+
                 else:
-                    code, self.class_name = Transformer(code, resourcename, params).start(type="method")
+                    # if it is a class, it must start with package keyword
+                    if code.strip().split(' ', 1)[0] == "package":
+                        code, self.class_name = Transformer(code, resourcename, params).start()
+                    else:
+                        code, self.class_name = Transformer(code, resourcename, params).start(type="method")
 
-                with open("java_classes/{}.java".format(self.class_name), "w") as java_file:
-                    print("{}".format(code), file=java_file)
+                    with open("java_classes/{}.java".format(self.class_name), "w") as java_file:
+                        print("{}".format(code), file=java_file)
 
-                result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
+                    result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
 
                 print(result)
 
-                if result:  # if building and execution were successful
-                    # send back output and duration in seconds
+                if result:  # if building and execution were successful, send back output and duration in seconds
                     output = result[0]
                     duration = result[1]
 
