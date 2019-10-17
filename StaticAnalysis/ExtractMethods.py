@@ -4,7 +4,7 @@ from androguard.core.analysis.analysis import ExternalMethod
 import matplotlib.pyplot as plt
 import networkx as nx
 
-a, d, dx = AnalyzeAPK("APK/mamoc_demo-debug.apk")
+a, d, dx = AnalyzeAPK("APK_files/mamoc_demo-debug.apk")
 
 from networkx.drawing.nx_agraph import graphviz_layout
 import pygraphviz as pgv

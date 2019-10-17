@@ -21,7 +21,7 @@ class Transformer(object):
             return code, class_name
         elif type == "method":
             code = self.removeannotations(self.code)  # remove the annotations as we do need them anymore
-            code = self.generateclass(code, self.resourcename, self.params)
+            code = self.generateclass(code)
 
             if self.resourcename != "None":
                 code = "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;" + code
@@ -92,19 +92,23 @@ class Transformer(object):
     def addResourceCode(self, source):
         firstopenbrace = source.find("{") + 1  # we want to place the resource method after the first occurrence of braces
 
-        resourcemethod = f"\n\n\tpublic static String readResourceContent(String filePath){{\n"
-        resourcemethod += "\t\ttry {\n"
-        resourcemethod += "\t\t\treturn new String(Files.readAllBytes(Paths.get(filePath)));\n"
-        resourcemethod += "\t\t} catch (IOException e) {\n"
-        resourcemethod += "\t\t\te.printStackTrace();\n"
-        resourcemethod += "\t\t\treturn null;\t\t\n\t\t}\n\t}"
+        resourcemethod = """\n\n\tpublic static String readResourceContent(String filePath){{\n
+        \t\ttry {\n
+        \t\t\treturn new String(Files.readAllBytes(Paths.get(filePath)));\n
+        \t\t} catch (IOException e) {\n
+        \t\t\te.printStackTrace();\n
+        \t\t\treturn null;\t\t\n\t\t}\n\t}"""
 
         return source[:firstopenbrace] + resourcemethod + source[firstopenbrace:]
 
-    def generateclass(self, source, resourcename, params):
-        class_name = "TestRunner"
+    def findmethodname(self, source):
+        list_of_words = source.split()
+        method_name = list_of_words[list_of_words.index("void") + 1]  # find the name of the class sent
+        return method_name
+
+    def generateclass(self, source):
+        class_name = self.findmethodname + "Class"
         method_name = source.split('(', 1)[0].split(" ")[-1]
-        print("name: " + method_name)
 
         class_header = f"public class {class_name}{{\n\t"
         mainmethod = f"\n\n\tpublic static void main(String[] args){{\n\t\t"

@@ -4,7 +4,7 @@
    File name: download_apk.py
    Author: Dawand Sulaiman
 
-   Download APK files from Google Play Store with Python
+   Download APK_files files from Google Play Store with Python
    This script scraps https://apkpure.com to get the apk download link
    Make sure you have BeautifulSoup and urllib libraries
 """
@@ -38,7 +38,7 @@ def download(link):
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) '
                           'Version/9.1.2 Safari/601.7.5 '
         })
-        apk_file = os.path.join("./APK", link.split('/')[-1] + '.apk')
+        apk_file = os.path.join("./APK_files", link.split('/')[-1] + '.apk')
         with open(apk_file, 'wb') as file:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:

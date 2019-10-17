@@ -3,15 +3,15 @@ from androguard.misc import AnalyzeAPK
 from androguard.core.analysis import analysis
 
 
-# apk = ExtractCG('APK/mamoc_test.apk')
+# apk = ExtractCG('APK_files/mamoc_test.apk')
 # analysis = apk.extract()
 # dx = analysis[0]
 # call_graph = analysis[1]
 
 # dx: analysis.Analysis
-# apk, dvm, dx = AnalyzeAPK('APK/mamoc_test.apk')
+# apk, dvm, dx = AnalyzeAPK('APK_files/mamoc_test.apk')
 
-# a = apk.APK('APK/mamoc_test.apk')
+# a = apk.APK_files('APK_files/mamoc_test.apk')
 # d = dvm.DalvikVMFormat(a.get_dex())
 # for current_class in d.get_classes():
 #     for method in current_class.get_methods():
@@ -53,7 +53,7 @@ class ExtractCG(object):
         a, d, dx = AnalyzeAPK(self.apk_file)
         call_graph = dx.get_call_graph()
 
-        print("APK methods: ", len(call_graph))
+        print("APK_files methods: ", len(call_graph))
         # print(type(dx))
         allClasses = dx.get_classes()
         print("all:", len(allClasses))
