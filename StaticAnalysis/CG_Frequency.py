@@ -52,7 +52,6 @@ def filter_methods(dx):
     return filtered_callgraph
 
 
-
 def main():
 
     a, d, dx = AnalyzeAPK('../APK_files/app-debug.apk')

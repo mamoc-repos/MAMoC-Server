@@ -26,11 +26,12 @@ class ApplicationRefactor:
         IdentifyAPK.AnnotateOffloadables(a, offloadbables)
 
         # compile and sign the APK_files
-        sign_apk(a)
+        # sign_apk(a)
 
         time_spent = time.time() - tic
 
         print(time_spent)
+
 
 for apk in apk_list:
     ApplicationRefactor.refactor(apk)
