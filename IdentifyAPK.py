@@ -12,16 +12,17 @@ api_candidates_with_L = platform_list + support_list
 api_candidates = platform_lines + support_lines
 
 
-def filter_internal_classes(dx):
-    classes = dx.get_classes()
+def filter_internal_classes(d):
+    classes = d.get_classes()
     filtered_classes = []
     methods = 0
 
     # Check if the class is an Android library class
     for c in classes:
-        c_methods = len(c.get_vm_class().get_methods())
+        c_methods = len(c.get_methods())
         methods += c_methods
-        if not c.get_vm_class().get_name().startswith(tuple(api_candidates_with_L)) and not c.is_external():
+        if not c.get_vm_class().get_name().startswith(tuple(api_candidates_with_L)):
+                # and not c.is_external():
             filtered_classes.append(c)
 
     print("Number of classes in the app: ", len(classes))
@@ -31,15 +32,15 @@ def filter_internal_classes(dx):
     return filtered_classes, methods, len(classes)
 
 
-def identify(a, dx):
+def identify(a, d):
 
-    filtered_classes, methods, orig_classes = filter_internal_classes(dx)
+    filtered_classes, methods, orig_classes = filter_internal_classes(d)
     class_codes = []
     offloadables = []
 
     for c in filtered_classes:
         code = c.get_vm_class().get_source()
-
+        # print(code)
         if code is not None:
             class_codes.append(code)
 

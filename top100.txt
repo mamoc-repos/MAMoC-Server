@@ -1,10 +1,4 @@
 Sudoku game org.moire.opensudoku
-N-Queens game com.memmiolab.queens
-Gobang game ric.ov.SimplyGomoku
-Twitter video downloader tweeter.gif.twittervideodownloader
-OpenCV face detection Imaging tools
-Photoshoot Game
-Google goggles Imaging tools (face recognition)
 Ebay Web applications
 Navegador chrome Web applications
 Youtube Video streaming
