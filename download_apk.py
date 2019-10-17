@@ -10,6 +10,7 @@
    Required libraries: BeautifulSoup and urllib
 """
 import os
+from os import path
 
 from bs4 import BeautifulSoup
 from urllib.parse import quote_plus
@@ -49,6 +50,10 @@ def download(link):
 
 def download_apk(app_id):
     print("searching for ", app_id)
+    if path.exists("APK_files/{}.apk".format(app_id)):
+        print("Found the APK locally")
+        return
+
     download_link = search(app_id)
 
     if download_link is not None:

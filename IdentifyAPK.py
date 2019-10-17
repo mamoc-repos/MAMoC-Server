@@ -28,16 +28,16 @@ def filter_internal_classes(dx):
     print("Number of methods in the app: ", methods)
     print("Number of filtered classes: ", len(filtered_classes))
 
-    return filtered_classes
+    return filtered_classes, methods, len(classes)
 
 
 def identify(a, dx):
 
-    classes = filter_internal_classes(dx)
+    filtered_classes, methods, orig_classes = filter_internal_classes(dx)
     class_codes = []
     offloadables = []
 
-    for c in classes:
+    for c in filtered_classes:
         code = c.get_vm_class().get_source()
 
         if code is not None:
@@ -60,7 +60,7 @@ def identify(a, dx):
                 offloadables.append(code)
 
     print("Number of offloadable classes: ", len(offloadables))
-    return offloadables
+    return len(filtered_classes), methods, orig_classes, len(class_codes), offloadables
 
     # method_codes = []
     # offloadables = []
