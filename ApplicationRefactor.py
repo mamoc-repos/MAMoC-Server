@@ -4,8 +4,13 @@ from androguard.misc import AnalyzeAPK, sign_apk
 import IdentifyAPK
 from download_apk import download_apk
 
-apk_list = ['org.moire.opensudoku']
+apk_ids = []
+apk_list = open("top100.txt", "r")
+lines = apk_list.read().splitlines()
+for line in lines:
+    apk_ids.append(line.split(' ')[-1])
 
+output_file =
 
 class ApplicationRefactor:
 
@@ -22,16 +27,21 @@ class ApplicationRefactor:
         # Identify Offloadables
         offloadbables = IdentifyAPK.identify(a, dx)
 
-        # Annotate the offloadables
-        IdentifyAPK.AnnotateOffloadables(a, offloadbables)
+        # Annotate the offloadables and
+        # IdentifyAPK.AnnotateOffloadables(a, offloadbables)
 
         # compile and sign the APK_files
         # sign_apk(a)
 
         time_spent = time.time() - tic
 
-        print(time_spent)
+        print('{:4f}'.format(time_spent))
 
 
-for apk in apk_list:
-    ApplicationRefactor.refactor(apk)
+def main():
+    for apk in apk_ids:
+        ApplicationRefactor.refactor(apk)
+
+
+if __name__ == '__main__':
+    main()

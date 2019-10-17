@@ -8,7 +8,8 @@ support_file = open("Android-API-Files/android_support_packages.txt", "r")
 support_lines = support_file.read().splitlines()
 support_list = ["L" + s.replace('.', '/') for s in support_lines]
 
-api_candidates = platform_list + support_list
+api_candidates_with_L = platform_list + support_list
+api_candidates = platform_lines + support_lines
 
 
 def filter_internal_classes(dx):
@@ -20,7 +21,7 @@ def filter_internal_classes(dx):
     for c in classes:
         c_methods = len(c.get_vm_class().get_methods())
         methods += c_methods
-        if not c.get_vm_class().get_name().startswith(tuple(api_candidates)):
+        if not c.get_vm_class().get_name().startswith(tuple(api_candidates_with_L)) and not c.is_external():
             filtered_classes.append(c)
 
     print("Number of classes in the app: ", len(classes))
@@ -46,15 +47,17 @@ def identify(a, dx):
 
     for code in class_codes:
         codeArray = code.split(' ')
-        print(codeArray)
-        android_match = False
-        for c in codeArray:
-            if c.startswith(tuple(api_candidates)):
-                android_match = True
-                break
 
-        if not android_match:
-            offloadables.append(code)
+        # Check if it is class (not interface)
+        if 'class' in codeArray:
+            android_match = False
+            for c in codeArray:
+                if c.startswith(tuple(api_candidates)):
+                    android_match = True
+                    break
+
+            if not android_match:
+                offloadables.append(code)
 
     print("Number of offloadable classes: ", len(offloadables))
     return offloadables
@@ -79,4 +82,10 @@ def identify(a, dx):
 
 def AnnotateOffloadables(a, offlodables):
     for off in offlodables:
-        annotated_off = "@Offloadable" + off[:]
+        class_loc = off.find('class')
+        if class_loc is not None:
+            if off[class_loc-1] is "public" or off[class_loc-1] is "final":
+                annotated_off = off[:class_loc-1] + "@Offloadable\n" + off[class_loc-1:]
+            else:
+                annotated_off = off[:class_loc] + "@Offloadable\n" + off[class_loc:]
+            print(annotated_off)

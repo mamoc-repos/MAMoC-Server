@@ -48,6 +48,7 @@ def download(link):
 
 
 def download_apk(app_id):
+    print("searching for ", app_id)
     download_link = search(app_id)
 
     if download_link is not None:
