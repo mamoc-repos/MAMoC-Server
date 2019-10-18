@@ -82,6 +82,17 @@ Then run the docker
 docker run -it -d --network="host" --name "mamoc-server" mamoc_server
 ```
 
+## Application Refactoring
+
+MAMoC Server also diassembles and decompiles Android APKs to analyse the classes and methods. The source code is examined for identifying classes which are not dependant on native device features. Have a look at [ApplicationRefactor.py](ApplicationRefactor.py) file to understand how it works.
+
+To execute the application refactoring on an APK, add the Application name and APP ID to the apps_list.txt file, and run:
+
+```python
+python3 ApplicationRefactor.py
+```
+You can view the number of classes, methods, filtered classes (internal classes derived from the .dex file), and offloadable classes (classes which do not have dependencies on Android platform).
+
 ## Credits
 1. [Crossbar + Autobahn](https://crossbar.io/autobahn/)
 2. [OpenJDK Docker images](https://hub.docker.com/_/openjdk/)
