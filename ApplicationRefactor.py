@@ -31,13 +31,13 @@ class ApplicationRefactor:
         download_apk(app_id)
 
         # Analyze the APK_files in the /APK_files folder
-        # a, d, dx = AnalyzeAPK('APK_files/{}.apk'.format(app_id))
+        a, d, dx = AnalyzeAPK('APK_files/{}.apk'.format(app_id))
 
-        jadx = pyjadx.Jadx()
-        app = jadx.load('APK_files/{}.apk'.format(app_id))
-
-        for cls in app.classes:
-            print(cls.code)
+        # jadx = pyjadx.Jadx()
+        # app = jadx.load('APK_files/{}.apk'.format(app_id))
+        #
+        # for cls in app.classes:
+        #     print(cls.code)
 
         # # Enable log output
         # # show_logging(level=logging.DEBUG)
@@ -60,9 +60,9 @@ class ApplicationRefactor:
         #     print(decompiler.get_source_class(c))
 
         # Identify Offloadables
-        # classes, methods, filtered_classes, class_codes, offloadables = IdentifyAPK.identify(a, dx)
-        # output_file.write(str(classes) + " " + str(methods) + " " + str(filtered_classes) + " " + str(class_codes)
-        #                   + " " + str(len(offloadables)) + "\n")
+        classes, methods, filtered_classes, class_codes, offloadables = IdentifyAPK.identify(a, dx)
+        output_file.write(str(classes) + " " + str(methods) + " " + str(filtered_classes) + " " + str(class_codes)
+                          + " " + str(len(offloadables)) + "\n")
 
         # Annotate the offloadables and
         # IdentifyAPK.AnnotateOffloadables(a, offloadbables)
