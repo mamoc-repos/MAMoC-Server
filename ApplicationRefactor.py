@@ -1,5 +1,5 @@
 import time
-import pyjadx
+# import pyjadx
 
 from androguard.core.analysis.analysis import Analysis
 from androguard.core.androconf import show_logging
@@ -7,7 +7,6 @@ from androguard.core.bytecodes.apk import APK
 from androguard.core.bytecodes.dvm import DalvikVMFormat
 from androguard.decompiler.decompiler import DecompilerJADX
 from androguard.misc import AnalyzeAPK, sign_apk
-from pip._internal.utils import logging
 
 import IdentifyAPK
 from download_apk import download_apk
