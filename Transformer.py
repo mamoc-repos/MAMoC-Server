@@ -92,7 +92,7 @@ class Transformer(object):
     def addResourceCode(self, source):
         firstopenbrace = source.find("{") + 1  # we want to place the resource method after the first occurrence of braces
 
-        resourcemethod = """\n\n\tpublic static String readResourceContent(String filePath){{\n
+        resourcemethod = """\n\n\tpublic static String readResourceContent(String filePath){\n
         \t\ttry {\n
         \t\t\treturn new String(Files.readAllBytes(Paths.get(filePath)));\n
         \t\t} catch (IOException e) {\n
