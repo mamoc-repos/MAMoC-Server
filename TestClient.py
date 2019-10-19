@@ -107,12 +107,13 @@ component = Component(
     transports=[
         {
             u"type": u"websocket",
-            u"url": u"ws://127.0.0.1:8080/ws",
-            u"endpoint": {
-                u"type": u"tcp",
-                u"host": u"localhost",
-                u"port": 8080,
-            },
+            # u"url": u"ws://127.0.0.1:8080/ws",
+            u"url": u"wss://djs21.host.cs.st-andrews.ac.uk/offload/ws/", # Connecting to student host
+            # u"endpoint": {
+            #     u"type": u"tcp",
+            #     u"host": u"djs21.host.cs.st-andrews.ac.uk/offload/ws",
+            #     u"port": 3004,
+            # },
             # you can set various websocket options here if you want
             u"options": {
                 u"open_handshake_timeout": 100,
@@ -150,11 +151,11 @@ async def join(session, details):
 
 
 def present_menu():
-    print("\t1. Class offloading")
-    print("\t2. Method offloading")
-    print("\t3. Quit")
+    print(""""
+    1. Class offloading\t2. Method offloading\t3. Quit
+    """)
 
-    choice = int(input("\nPlease select one of the three options "))
+    choice = int(input("\nPlease select one of the three options: \n"))
 
     while choice < 1 or choice > 3:
         print("The selection provided is invalid.")
@@ -170,7 +171,7 @@ async def class_offloading(session):
         print("class call error: {0}".format(e))
         # if the RPC is not registered in the server, publish the source code
         session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", class_id, class_code, "large", ["hi"])
-        await print_result(class_id, session)
+        # await print_result(class_id, session)
 
 
 async def print_result(id, session):
@@ -189,7 +190,7 @@ async def method_offloading(session):
         print("method call error: {0}".format(e))
         # if the RPC is not registered in the server, publish the source code
         session.publish("uk.ac.standrews.cs.mamoc.offloading", "Android", method_id, method_code, "None", ["hi"])
-        await print_result(method_id, session)
+        # await print_result(method_id, session)
 
 
 @component.subscribe("uk.ac.standrews.cs.mamoc.offloadingresult")
