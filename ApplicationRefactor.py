@@ -1,12 +1,13 @@
 import time
+# Uncomment if you want to use the JADX decompiler instead of the built-in decompiler provided by Androguard
 # import pyjadx
+# from androguard.core.analysis.analysis import Analysis
+# from androguard.core.androconf import show_logging
+# from androguard.core.bytecodes.apk import APK
+# from androguard.core.bytecodes.dvm import DalvikVMFormat
+# from androguard.decompiler.decompiler import DecompilerJADX
 
-from androguard.core.analysis.analysis import Analysis
-from androguard.core.androconf import show_logging
-from androguard.core.bytecodes.apk import APK
-from androguard.core.bytecodes.dvm import DalvikVMFormat
-from androguard.decompiler.decompiler import DecompilerJADX
-from androguard.misc import AnalyzeAPK, sign_apk
+from androguard.misc import AnalyzeAPK
 
 import IdentifyAPK
 from download_apk import download_apk
@@ -33,14 +34,13 @@ class ApplicationRefactor:
         # Analyze the APK_files in the /APK_files folder
         a, d, dx = AnalyzeAPK('APK_files/{}.apk'.format(app_id))
 
+        # Uncomment if you want to use the JADX decompiler instead of the built-in decompiler provided by Androguard
         # jadx = pyjadx.Jadx()
         # app = jadx.load('APK_files/{}.apk'.format(app_id))
         #
         # for cls in app.classes:
         #     print(cls.code)
 
-        # # Enable log output
-        # # show_logging(level=logging.DEBUG)
         # # Load our example APK
         # a = APK('APK_files/{}.apk'.format(app_id))
         # # Create DalvikVMFormat Object

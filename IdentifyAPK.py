@@ -41,11 +41,11 @@ def identify(a, d):
     offloadables = []
 
     for c in filtered_classes:
-        code = c.get_vm_class().get_source()
-        # print(code)
-        if code is not None:
-            class_codes.append(code)
-
+        try:
+            c.get_vm_class().get_source()
+            class_codes.append(c.get_vm_class().get_source())
+        except AttributeError:
+            print("code not found for ", c.get_vm_class().get_name())
     print("Number of classes with codes: ", len(class_codes))
 
     for code in class_codes:
