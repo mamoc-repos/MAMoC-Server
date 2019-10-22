@@ -12,7 +12,8 @@ import IdentifyAPK
 from download_apk import download_apk
 
 apk_ids = []
-apk_list = open("top100.txt", "r")
+# apk_list = open("top100.txt", "r")
+apk_list = open("apps_list.txt", "r")
 output_file = open("output/refactor_results.txt", "w")
 output_file.write("APP_ID" + " " + "Classes" + " " + "Methods" + " " + "Filtered" + " " + "Has_Code" + " " + "Offloadables\n")
 lines = apk_list.read().splitlines()

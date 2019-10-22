@@ -2,14 +2,16 @@ platform_file = open("Android-API-Files/android_platform_packages.txt", "r")
 platform_lines = platform_file.read().splitlines()
 platform_list = ["L" + p.replace('.', '/') for p in platform_lines]
 
-# print(platform_list)
-
 support_file = open("Android-API-Files/android_support_packages.txt", "r")
 support_lines = support_file.read().splitlines()
 support_list = ["L" + s.replace('.', '/') for s in support_lines]
 
-api_candidates_with_L = platform_list + support_list
-api_candidates = platform_lines + support_lines
+ignored_file = open("Android-API-Files/ignored.list", "r")
+ignored_lines = ignored_file.read().splitlines()
+ignored_list = ["L" + s.replace('.', '/') for s in support_lines]
+
+api_candidates_with_L = platform_list + support_list + ignored_list
+api_candidates = platform_lines + support_lines + ignored_lines
 
 
 def filter_internal_classes(d):
