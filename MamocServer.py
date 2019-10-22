@@ -1,7 +1,7 @@
 from os import environ, path
 
 from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
-from autobahn.wamp import ApplicationError
+from autobahn.wamp import ApplicationError, RegisterOptions
 
 from JavaExecutor import JavaExecutor
 from StatsCollector import StatsCollector
@@ -79,7 +79,7 @@ class MamocServer(ApplicationSession):
 
                     # register the procedure for next time rpc request
                     try:
-                        re = await self.register(self.execute_java, rpcname)
+                        re = await self.register(self.execute_java, rpcname, options=RegisterOptions(invoke=u'roundrobin'))
                     except ApplicationError as e:
                         print("could not register procedure: {0}".format(e))
                     else:

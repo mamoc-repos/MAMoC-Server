@@ -107,8 +107,8 @@ component = Component(
     transports=[
         {
             u"type": u"websocket",
-            u"url": u"ws://127.0.0.1:8080/ws",
-            # u"url": u"wss://djs21.host.cs.st-andrews.ac.uk/offload/ws/", # Connecting to student host
+            # u"url": u"ws://127.0.0.1:8080/ws",
+            u"url": u"wss://djs21.host.cs.st-andrews.ac.uk/offload/ws/", # Connecting to student host
             # u"endpoint": {
             #     u"type": u"tcp",
             #     u"host": u"djs21.host.cs.st-andrews.ac.uk/offload/ws",
@@ -174,8 +174,10 @@ async def class_offloading(session):
         # await print_result(class_id, session)
 
 
-async def print_result(id, session):
-    res = await session.call(id, ["hi"])
+async def print_result(passed_id, session):
+    print("called ID: ", passed_id)
+
+    res = await session.call(passed_id, ["hi"])
     if res[2] is None:
         print("output: {}".format(res[0]))
         print("duration: {}".format(res[1]))
