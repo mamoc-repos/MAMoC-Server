@@ -95,7 +95,7 @@ public class KMP {
 method_id = "uk.ac.standrews.cs.mamoc.say_hello"
 method_code = """
 @Offloadable(resourceDependent = false, parallelizable = true)
-public void say_hello(){
+public void say_hello () {
     String hello = "Hello, World";
     System.out.print(hello);
 }
@@ -107,8 +107,8 @@ component = Component(
     transports=[
         {
             u"type": u"websocket",
-            # u"url": u"ws://127.0.0.1:8080/ws",
-            u"url": u"wss://djs21.host.cs.st-andrews.ac.uk/offload/ws/", # Connecting to student host
+            u"url": u"ws://127.0.0.1:8080/ws",
+            # u"url": u"wss://djs21.host.cs.st-andrews.ac.uk/offload/ws/", # Connecting to student host
             # u"endpoint": {
             #     u"type": u"tcp",
             #     u"host": u"djs21.host.cs.st-andrews.ac.uk/offload/ws",

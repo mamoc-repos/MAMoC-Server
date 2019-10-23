@@ -49,6 +49,7 @@ class MamocServer(ApplicationSession):
             print("Received params: {}".format(params))
 
             if source == "Android":
+                self.class_name = rpcname
                 self.params = params
 
                 # Java file already cached in MAMoC Repository
@@ -61,6 +62,7 @@ class MamocServer(ApplicationSession):
                         code, self.class_name = Transformer(code, resourcename, params).start()
                     else:
                         code, self.class_name = Transformer(code, resourcename, params).start(type="method")
+                        print("class name returned from transformer: ", self.class_name)
 
                     with open("java_classes/{}.java".format(self.class_name), "w") as java_file:
                         print("{}".format(code), file=java_file)

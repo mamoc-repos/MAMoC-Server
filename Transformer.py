@@ -21,13 +21,14 @@ class Transformer(object):
             return code, class_name
         elif type == "method":
             code = self.removeannotations(self.code)  # remove the annotations as we do need them anymore
-            code = self.generateclass(code)
+            method_name = self.findmethodname(code)
+            code, method_class_name = self.generateclass(code, method_name)
 
             if self.resourcename != "None":
                 code = "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;" + code
                 code = self.addResourceCode(code)
 
-            return code, "TestRunner"
+            return code, method_class_name
         else:
             print("Unknown offloading type!")
             return
@@ -103,18 +104,19 @@ class Transformer(object):
 
     def findmethodname(self, source):
         list_of_words = source.split()
-        method_name = list_of_words[list_of_words.index("void") + 1]  # find the name of the class sent
+        print(list_of_words)
+        method_name = list_of_words[list_of_words.index("void") + 1]  # find the name of the method sent
+        print(method_name)
         return method_name
 
-    def generateclass(self, source):
-        class_name = self.findmethodname + "Class"
-        method_name = source.split('(', 1)[0].split(" ")[-1]
+    def generateclass(self, source, method_name):
+        class_name = method_name + "Class"
 
         class_header = f"public class {class_name}{{\n\t"
         mainmethod = f"\n\n\tpublic static void main(String[] args){{\n\t\t"
 
-        return_type = source.split(f"{method_name}", 1)[0].split(" ")[-2]  # get the return type of the method
+        # return_type = source.split(f"{method_name}", 1)[0].split(" ")[-2]  # get the return type of the method
 
         mainmethod += f"new {class_name}().{method_name}(); \n\t}}"
 
-        return class_header + mainmethod + source + "\n}"
+        return class_header + mainmethod + source + "\n}", class_name
