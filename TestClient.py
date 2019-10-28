@@ -1,6 +1,8 @@
 from sys import exit
+import asyncio
 
 from autobahn.asyncio.component import Component, run
+from autobahn.wamp import CallOptions
 
 class_id = "uk.ac.standrews.cs.mamoc.SearchText.KMP"
 class_code = """
@@ -139,6 +141,13 @@ async def join(session, details):
 
     print("joined {}: {}".format(session, details))
 
+    def on_progress(i):
+        print("Progress: {}".format(i))
+
+    res = await session.call(u'uk.ac.standrews.cs.mamoc.sendfile', 3, options=CallOptions(on_progress=on_progress))
+
+    print("Final: {}".format(res))
+
     while True:
         choice = present_menu()
 
@@ -198,6 +207,12 @@ async def method_offloading(session):
 @component.subscribe("uk.ac.standrews.cs.mamoc.offloadingresult")
 async def result_returned(result, duration):
     print("execution returned {} took {} seconds".format(result, duration))
+
+
+@component.on_disconnect
+async def disconnected():
+    print("Disconnected from the server!")
+    asyncio.get_event_loop().stop()
 
 if __name__ == "__main__":
     run([component])

@@ -1,5 +1,7 @@
+import os
 from os import environ, path
 
+import asyncio
 from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
 from autobahn.wamp import ApplicationError, RegisterOptions
 
@@ -33,6 +35,7 @@ class MamocServer(ApplicationSession):
         self.traceback_app = True
         self.executor = JavaExecutor()
         self.class_name = ""
+        self.resourcename = ""
         self.params = ""
 
     async def onJoin(self, details):
@@ -42,14 +45,27 @@ class MamocServer(ApplicationSession):
         self.publish('uk.ac.standrews.cs.mamoc.stats', cpu, mem, battery)
         print("published server stats")
 
+        # async def receive_file(n, details=None):
+        #     if details.progress:
+        #         for i in range(n):
+        #             details.progress(i)
+        #             await asyncio.sleep(1)
+        #     else:
+        #         await asyncio.sleep(1 * n)
+        #     return n
+        #
+        # await self.register(receive_file, u'uk.ac.standrews.cs.mamoc.sendfile', RegisterOptions(details_arg='details'))
+
         async def on_offloding_event(source, rpcname, code, resourcename, params):
             print("Received from: {} app".format(source))
             print("Received RCP name: {}".format(rpcname))
             print("Received the source code: {}".format(code))
+            print("Received resource name: {}".format(resourcename))
             print("Received params: {}".format(params))
 
             if source == "Android":
                 self.class_name = rpcname
+                self.resourcename = resourcename
                 self.params = params
 
                 # Java file already cached in MAMoC Repository
@@ -67,7 +83,10 @@ class MamocServer(ApplicationSession):
                     with open("java_classes/{}.java".format(self.class_name), "w") as java_file:
                         print("{}".format(code), file=java_file)
 
-                    result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
+                    if resourcename is not None:
+                        result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), resourcename, params)
+                    else:
+                        result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
 
                 print(result)
 
@@ -76,12 +95,12 @@ class MamocServer(ApplicationSession):
                     duration = result[1]
 
                     output = self.decode_bytes(output)
-
+                    print("publishing result: {} that took {} seconds".format(output, duration))
                     self.publish('uk.ac.standrews.cs.mamoc.offloadingresult', output, duration)
 
                     # register the procedure for next time rpc request
                     try:
-                        re = await self.register(self.execute_java, rpcname, options=RegisterOptions(invoke=u'roundrobin'))
+                        re = await self.register(self.execute_java, rpcname)
                     except ApplicationError as e:
                         print("could not register procedure: {0}".format(e))
                     else:
@@ -95,10 +114,29 @@ class MamocServer(ApplicationSession):
         sub = await self.subscribe(on_offloding_event, "uk.ac.standrews.cs.mamoc.offloading")
         print("Subscribed to uk.ac.standrews.cs.mamoc.offloading with {}".format(sub.id))
 
-    def execute_java(self, input):
-        print("execute_java {} {}".format(self.class_name, input))
-        output, duration, errors = self.executor.execute_java(self.class_name, input)
+        async def on_file_received_event(source, file_name, file_content):
+            print("Received file name: {}".format(file_name))
+            print("Received file content: {}".format(file_content))
+
+            if source == "Android":
+                resource_file = open("data/" + file_name, 'w+')
+                resource_file.write(file_content)
+            elif source == "iOS":
+                print("received from iOS app")
+            else:
+                print("unrecognized source!")
+
+        sub = await self.subscribe(on_file_received_event, "uk.ac.standrews.cs.mamoc.receive_file")
+        print("Subscribed to uk.ac.standrews.cs.mamoc.receive_file with {}".format(sub.id))
+
+    def execute_java(self, resourcename, input):
+        print("execute_java {} {}".format(self.class_name, resourcename, input))
+        output, duration, errors = self.executor.execute_java(self.class_name, resourcename, input)
         output = self.decode_bytes(output)
+
+        print("publishing result: {} that took {} seconds".format(output, duration))
+        self.publish('uk.ac.standrews.cs.mamoc.offloadingresult', output, duration)
+
         return output, duration, errors
 
     def decode_bytes(self, encoded):

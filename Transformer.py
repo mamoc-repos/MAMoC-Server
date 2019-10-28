@@ -1,5 +1,4 @@
 
-
 class Transformer(object):
 
     def __init__(self, code, resourcename, params):
@@ -14,7 +13,7 @@ class Transformer(object):
             class_name = self.findclassname(code)  # identify the class name for javac command
             code = self.addmainmethod(class_name, code, self.resourcename, self.params)  # Add the main method for java command
 
-            if self.resourcename != "None":
+            if self.resourcename is not None:
                 code = "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;" + code
                 code = self.addResourceCode(code)
 
@@ -24,7 +23,7 @@ class Transformer(object):
             method_name = self.findmethodname(code)
             code, method_class_name = self.generateclass(code, method_name)
 
-            if self.resourcename != "None":
+            if self.resourcename is not None:
                 code = "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;" + code
                 code = self.addResourceCode(code)
 
@@ -60,20 +59,21 @@ class Transformer(object):
             mainmethod += "System.out.print("
 
         mainmethod += f"new {class_name}("
-
-        if resourcename != "None":
-            mainmethod += f"readResourceContent(\"../data/{resourcename}.txt\")"
+        addargs = 0
+        if resourcename is not None:
+            mainmethod += f"readResourceContent(\"../data/\" + args[0])"
+            addargs += 1
 
         for index, param in enumerate(params):
             parser = self.getParser(param)
 
-            if index > 0 or resourcename != "None":
+            if index > 0 or resourcename is not None:
                 mainmethod += ", "
 
             if parser is None:
-                mainmethod += f"args[{index}]"
+                mainmethod += f"args[{index + addargs}]"
             else:
-                mainmethod += f"{parser}args[{index}])"
+                mainmethod += f"{parser}args[{index + addargs}])"
 
         mainmethod += ").run()"
 

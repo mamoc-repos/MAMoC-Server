@@ -29,7 +29,9 @@ RUN    apt-get update \
                build-essential \
                libssl-dev \
                libffi-dev \
+		libsnappy-dev \
     # install Crossbar.io from PyPI
+	&& pip install python-snappy \
     && pip install --no-cache-dir -U pip \
     && pip install --no-cache-dir crossbar>=${CROSSBAR_VERSION} \
     # minimize image

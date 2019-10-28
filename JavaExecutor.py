@@ -4,12 +4,12 @@ import time
 
 class JavaExecutor(object):
 
-    def startExecuting(self, classname, javafile, params):
+    def startExecuting(self, classname, javafile, resourcename, params):
         compres = self.compile_java(javafile)
         print(compres)
 
         if compres.find("error") == -1 or compres.find("Exception") == -1:  # if build was successful start executing it
-            execres = self.execute_java(classname, params)
+            execres = self.execute_java(classname, resourcename, params)
             if execres[2] is None:
                 print("Finished running {} with params: {} in {} seconds".format(classname, params, execres[1]))
                 return execres
@@ -23,15 +23,17 @@ class JavaExecutor(object):
 
         return output[0].decode("utf-8")
 
-    def execute_java(self, classname, params):
+    def execute_java(self, classname, resourcename, params):
         tic = time.time()
-
+        args = []
+        if resourcename is not None:
+            args.append(resourcename)
         if type(params) is int:
-            args = params
+            args.append(params)
         else:
-            args = " ".join(map(str, params))
+            args.append(" ".join(map(str, params)))
 
-        cmd = "cd java_classes && java {} {}".format(classname, args)
+        cmd = "cd java_classes && java {} {}".format(classname, " ".join(args))
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, errors = p.communicate()
 
