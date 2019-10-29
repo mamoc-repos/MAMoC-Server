@@ -13,10 +13,10 @@ import IdentifyAPK
 from download_apk import download_apk
 
 apk_ids = []
-apk_list = open("top100.txt", "r")
-#apk_list = open("apps_list.txt", "r")
+#apk_list = open("top100.txt", "r")
+apk_list = open("apps_list.txt", "r")
 output_file = open("output/refactor_results.txt", "w")
-output_file.write("APP_ID" + " " + "Classes" + " " + "Methods" + " " + "Filtered" + " " + "Has_Code" + " " + "Offloadables\n")
+output_file.write("APP_ID" + " " + "Classes" + " " + "Methods" + " " + "Filtered" + " " + "Has_Code" + " " + "Offloadables" + " " + "Time\n")
 lines = apk_list.read().splitlines()
 for line in lines:
     apk_ids.append(line.split(' ')[-1])
@@ -61,8 +61,7 @@ class ApplicationRefactor:
 
         # Identify Offloadables
         classes, methods, filtered_classes, class_codes, offloadables = IdentifyAPK.identify(a, dx)
-        output_file.write(str(classes) + " " + str(methods) + " " + str(filtered_classes) + " " + str(class_codes)
-                          + " " + str(len(offloadables)) + "\n")
+        # output_file.write(str(classes) + " " + str(methods) + " " + str(filtered_classes) + " " + str(class_codes) + " " + str(len(offloadables)) + "\n")
 
         # Annotate the offloadables and
         # IdentifyAPK.AnnotateOffloadables(a, offloadbables)
@@ -73,7 +72,7 @@ class ApplicationRefactor:
         time_spent = time.time() - tic
 
         print('{:4f}'.format(time_spent))
-
+        output_file.write(str(classes) + " " + str(methods) + " " + str(filtered_classes) + " " + str(class_codes) + " " + str(len(offloadables)) + " " + str('{:2f}'.format(time_spent)) + "\n")
 
 def main():
     for apk in apk_ids:
