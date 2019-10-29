@@ -1,5 +1,3 @@
-Sudoku game org.moire.opensudoku
-Ebay Web applications
 Navegador chrome Web applications
 Youtube Video streaming
 Bing search Web applications

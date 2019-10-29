@@ -4,3 +4,4 @@ Gobang game ric.ov.SimplyGomoku
 Video downloader for Twitter com.billApps.VTLoader
 OpenCV face detection com.ollieteam.facedetection
 Photoshoot Game com.appsdgl.photoPuzzle
+DealsPure app com.dealspure.wild
