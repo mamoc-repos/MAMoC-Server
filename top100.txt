@@ -1,10 +1,4 @@
-Navegador chrome Web applications
-Youtube Video streaming
-Bing search Web applications
-Flickr Web applications
-Facebook Web applications
-Linpack for android Mathematical tools
-CNN breaking US and world news Web applications
+BBC bbc.mobile.news.ww
 ESPN SportsCenter Web applications
 Twitter Download app
 Last.fm Web applications

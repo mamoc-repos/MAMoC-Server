@@ -26,6 +26,7 @@ def filter_internal_classes(d):
         if not c.get_vm_class().get_name().startswith(tuple(api_candidates_with_L)):
                 # and not c.is_external():
             filtered_classes.append(c)
+            print(c)
 
     print("Number of classes in the app: ", len(classes))
     print("Number of methods in the app: ", methods)
@@ -63,7 +64,7 @@ def identify(a, d):
                 offloadables.append(code)
 
     print("Number of offloadable classes: ", len(offloadables))
-    return len(filtered_classes), methods, orig_classes, len(class_codes), offloadables
+    return orig_classes, methods, len(filtered_classes), len(class_codes), offloadables
 
     # method_codes = []
     # offloadables = []
