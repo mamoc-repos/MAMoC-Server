@@ -56,7 +56,7 @@ RUN echo "**** install Python ****" && \
 # ENV JAVA_HOME="/opt/jdk/bin"
 
 ### 5. Add source code to server directory 
-ADD . /server
+COPY . /server
 
 ### 6. install requirements and run the app
 CMD (cd /server; python3 setup.py install; python3 app.py;)
