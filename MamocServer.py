@@ -83,10 +83,10 @@ class MamocServer(ApplicationSession):
                     with open("java_classes/{}.java".format(self.class_name), "w") as java_file:
                         print("{}".format(code), file=java_file)
 
-                    if resourcename is not None:
-                        result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), resourcename, params)
-                    else:
-                        result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
+                    # if resourcename is not None:
+                    result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), resourcename, params)
+                    # else:
+                    #     result = self.executor.startExecuting(self.class_name, "{}.java".format(self.class_name), params)
 
                 print(result)
 
@@ -100,7 +100,7 @@ class MamocServer(ApplicationSession):
 
                     # register the procedure for next time rpc request
                     try:
-                        re = await self.register(self.execute_java, rpcname)
+                        re = await self.register(execute_java, rpcname)
                     except ApplicationError as e:
                         print("could not register procedure: {0}".format(e))
                     else:
@@ -113,6 +113,16 @@ class MamocServer(ApplicationSession):
 
         sub = await self.subscribe(on_offloding_event, "uk.ac.standrews.cs.mamoc.offloading")
         print("Subscribed to uk.ac.standrews.cs.mamoc.offloading with {}".format(sub.id))
+
+        async def execute_java(resourcename, input):
+            print("execute_java {} {} {}".format(self.class_name, resourcename, input))
+            output, duration, errors = self.executor.execute_java(self.class_name, resourcename, input)
+            output = self.decode_bytes(output)
+
+            print("publishing result: {} that took {} seconds".format(output, duration))
+            self.publish('uk.ac.standrews.cs.mamoc.offloadingresult', output, duration)
+
+            return output, duration, errors
 
         async def on_file_received_event(source, file_name, file_content):
             print("Received file name: {}".format(file_name))
@@ -129,15 +139,6 @@ class MamocServer(ApplicationSession):
         sub = await self.subscribe(on_file_received_event, "uk.ac.standrews.cs.mamoc.receive_file")
         print("Subscribed to uk.ac.standrews.cs.mamoc.receive_file with {}".format(sub.id))
 
-    def execute_java(self, resourcename, input):
-        print("execute_java {} {}".format(self.class_name, resourcename, input))
-        output, duration, errors = self.executor.execute_java(self.class_name, resourcename, input)
-        output = self.decode_bytes(output)
-
-        print("publishing result: {} that took {} seconds".format(output, duration))
-        self.publish('uk.ac.standrews.cs.mamoc.offloadingresult', output, duration)
-
-        return output, duration, errors
 
     def decode_bytes(self, encoded):
         if encoded == b'':  # empty byte array
